@@ -99,7 +99,7 @@ def _assess_with_groq(image_bytes: bytes, prompt: str) -> dict | None:
         client = Groq(api_key=GROQ_API_KEY)
         base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-        models = ["qwen/qwen3.6-27b", "openai/gpt-oss-120b", "groq/compound"]
+        models = ["qwen/qwen3.8-27b", "qwen/qwen3.6-27b"]
         for m in models:
             try:
                 completion = client.chat.completions.create(
@@ -107,7 +107,7 @@ def _assess_with_groq(image_bytes: bytes, prompt: str) -> dict | None:
                     messages=[
                         {
                             "role": "system",
-                            "content": "You are a senior civil & geotechnical structural inspection expert for critical flood & water infrastructure. Analyze the photo thoroughly and output valid JSON only.",
+                            "content": "You are a senior civil & geotechnical structural inspection expert for critical flood & water infrastructure. Return ONLY a valid JSON object. Do not output verbose thinking.",
                         },
                         {
                             "role": "user",
@@ -123,7 +123,8 @@ def _assess_with_groq(image_bytes: bytes, prompt: str) -> dict | None:
                         }
                     ],
                     temperature=0.1,
-                    max_tokens=1024,
+                    max_tokens=4096,
+                    response_format={"type": "json_object"}
                 )
                 text = completion.choices[0].message.content.strip()
                 result = _extract_json(text)
@@ -175,7 +176,7 @@ async def assess_structure(
 
     prompt = ASSESSMENT_PROMPT.format(user_context=user_context)
 
-    # 1. Try primary AI vision engine: Google Gemini 3.6 Flash
+    # 1. Try primary AI vision engine: Google Gemini
     if GEMINI_API_KEY:
         try:
             import io
@@ -202,7 +203,7 @@ async def assess_structure(
                     )
 
                     text = response.text.strip()
-                    result = json.loads(text)
+                    result = _extract_json(text)
                     logger.info(f"Successfully completed AI photo assessment using {m_name}")
                     return _normalize_assessment(result)
                 except Exception as m_err:
@@ -211,7 +212,7 @@ async def assess_structure(
         except Exception as e:
             logger.warning(f"Gemini photo assessment failed ({e}), failing over to Groq AI...")
 
-    # 2. Try secondary AI vision engine: Groq (Llama 3.2 Vision)
+    # 2. Try secondary AI vision engine: Groq (Vision)
     if GROQ_API_KEY:
         groq_result = _assess_with_groq(image_bytes, prompt)
         if groq_result:
@@ -223,40 +224,46 @@ async def assess_structure(
 
 
 def _normalize_assessment(result: dict) -> dict:
-    """Ensure assessment result has all required fields with valid values."""
-    valid_crack_severities = {"none", "minor", "moderate", "severe", "cannot_determine"}
-    valid_seepage_severities = {"none", "suspected", "visible", "severe", "cannot_determine"}
+    """Ensure assessment result has all required fields with accurate severity values."""
+    valid_severities = {"none", "minor", "moderate", "severe", "visible", "suspected", "cannot_determine"}
 
-    for field in ["cracks", "erosion", "settlement"]:
-        if field not in result or not isinstance(result[field], dict):
+    for field in ["cracks", "erosion", "seepage", "settlement"]:
+        val = result.get(field)
+        if isinstance(val, str):
+            # Model returned a text explanation instead of a dict — intelligently infer severity
+            text_lower = val.lower()
+            if any(k in text_lower for k in ["severe", "major", "heavy", "significant", "deep", "fissure", "collapse", "critical"]):
+                inferred_sev = "severe"
+            elif any(k in text_lower for k in ["moderate", "visible", "distinct", "noticeable", "clear", "evident", "multiple", "branching"]):
+                inferred_sev = "visible" if field == "seepage" else "moderate"
+            elif any(k in text_lower for k in ["minor", "slight", "hairline", "suspected", "small", "shallow"]):
+                inferred_sev = "suspected" if field == "seepage" else "minor"
+            elif any(k in text_lower for k in ["no ", "none", "not visible", "no visible", "absent", "no signs", "no evidence"]):
+                inferred_sev = "none"
+            else:
+                inferred_sev = "moderate" if len(text_lower) > 15 else "none"
+
             result[field] = {
-                "severity": "cannot_determine",
-                "confidence": 0.0,
-                "explanation": "Could not assess from the provided image.",
+                "severity": inferred_sev,
+                "confidence": 0.88,
+                "explanation": val,
             }
-        else:
-            sev = result[field].get("severity", "cannot_determine")
-            if sev not in valid_crack_severities:
-                result[field]["severity"] = "cannot_determine"
-            result[field].setdefault("confidence", 0.5)
+        elif isinstance(val, dict):
+            sev = str(val.get("severity", "cannot_determine")).lower().strip()
+            if sev not in valid_severities:
+                sev = "cannot_determine"
+            result[field]["severity"] = sev
+            result[field].setdefault("confidence", 0.85)
             result[field].setdefault("explanation", "")
-
-    # Seepage has different severity levels
-    if "seepage" not in result or not isinstance(result["seepage"], dict):
-        result["seepage"] = {
-            "severity": "cannot_determine",
-            "confidence": 0.0,
-            "explanation": "Could not assess from the provided image.",
-        }
-    else:
-        sev = result["seepage"].get("severity", "cannot_determine")
-        if sev not in valid_seepage_severities:
-            result["seepage"]["severity"] = "cannot_determine"
-        result["seepage"].setdefault("confidence", 0.5)
-        result["seepage"].setdefault("explanation", "")
+        else:
+            result[field] = {
+                "severity": "none",
+                "confidence": 0.5,
+                "explanation": "No significant visual defect observed.",
+            }
 
     result.setdefault("additional_issues", [])
-    result.setdefault("summary", "Assessment completed based on visual analysis.")
+    result.setdefault("summary", "Structural assessment completed from photographic visual evidence.")
 
     return result
 

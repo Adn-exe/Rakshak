@@ -86,7 +86,7 @@ def _verify_with_groq(image_bytes: bytes) -> dict | None:
         client = Groq(api_key=GROQ_API_KEY)
         base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-        models = ["qwen/qwen3.6-27b", "openai/gpt-oss-120b", "groq/compound"]
+        models = ["qwen/qwen3.8-27b", "qwen/qwen3.6-27b"]
         for m in models:
             try:
                 completion = client.chat.completions.create(
@@ -94,7 +94,7 @@ def _verify_with_groq(image_bytes: bytes) -> dict | None:
                     messages=[
                         {
                             "role": "system",
-                            "content": "You are a civil & geotechnical infrastructure classification expert. Output valid JSON only.",
+                            "content": "You are a civil & geotechnical infrastructure classification expert. Return ONLY a valid JSON object.",
                         },
                         {
                             "role": "user",
@@ -110,7 +110,8 @@ def _verify_with_groq(image_bytes: bytes) -> dict | None:
                         }
                     ],
                     temperature=0.1,
-                    max_tokens=256,
+                    max_tokens=2048,
+                    response_format={"type": "json_object"}
                 )
                 text = completion.choices[0].message.content.strip()
                 result = _extract_json(text)
