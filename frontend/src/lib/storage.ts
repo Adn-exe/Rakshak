@@ -23,8 +23,21 @@ export function getReports(): Report[] {
 }
 
 export function getReport(id: string): Report | null {
+  if (typeof window === 'undefined') return null;
   const reports = getReports();
-  return reports.find((r) => r.id === id) || null;
+  const found = reports.find((r) => r.id === id);
+  if (found) return found;
+
+  // Check temporary session draft if not yet officially saved/submitted
+  const draftStr = sessionStorage.getItem(`rakshak_draft_${id}`);
+  if (draftStr) {
+    try {
+      return JSON.parse(draftStr);
+    } catch {
+      return null;
+    }
+  }
+  return null;
 }
 
 export function saveReport(report: Report): void {
@@ -37,6 +50,11 @@ export function saveReport(report: Report): void {
     reports.unshift(report);
   }
   localStorage.setItem(REPORTS_KEY, JSON.stringify(reports));
+}
+
+export function saveDraftReport(report: Report): void {
+  if (typeof window === 'undefined') return;
+  sessionStorage.setItem(`rakshak_draft_${report.id}`, JSON.stringify(report));
 }
 
 export function updateReportStatus(id: string, status: Report['status']): void {

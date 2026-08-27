@@ -12,7 +12,7 @@ import { ProgressSteps } from '@/components/ui/ProgressSteps';
 import { validateImage, analyzeInfrastructure } from '@/lib/api';
 import { compressImageForStorage } from '@/lib/image';
 import { getCurrentLocation } from '@/lib/location';
-import { saveReport, generateReportId } from '@/lib/storage';
+import { saveDraftReport, generateReportId } from '@/lib/storage';
 import { getCommunityData, getEngineerReports } from '@/lib/demoData';
 import type { Report, AssetType, Location, UserObservations } from '@/types';
 import {
@@ -359,7 +359,7 @@ export default function ReportPage() {
         submittedToAuthority: false,
       };
 
-      saveReport(report);
+      saveDraftReport(report);
       setCreatedReportId(reportId);
 
       updateStep(4, 'done');
@@ -435,7 +435,7 @@ export default function ReportPage() {
         submittedToAuthority: false,
       };
 
-      saveReport(report);
+      saveDraftReport(report);
       setCreatedReportId(reportId);
       updateStep(4, 'done');
       await sleep(300);

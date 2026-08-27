@@ -36,6 +36,9 @@ export default function HealthCardPage() {
       submittedAt: new Date().toISOString(),
     };
     saveReport(updated);
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(`rakshak_draft_${report.id}`);
+    }
     setReport(updated);
     setTimeout(() => {
       setIsSubmittingToAuth(false);
