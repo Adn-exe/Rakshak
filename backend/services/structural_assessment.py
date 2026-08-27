@@ -12,28 +12,35 @@ logger = logging.getLogger(__name__)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
-ASSESSMENT_PROMPT = """You are a senior civil & geotechnical infrastructure engineering AI specialist for Rakshak.
+ASSESSMENT_PROMPT = """You are a structural assessment system for JalRaksha, an infrastructure health monitoring platform.
 
-Inspect this infrastructure photograph at pixel level for structural distress, failure mechanisms, and visual defects.
+Analyze this infrastructure photograph for visible structural conditions. Be honest — only report what you can actually see. Do NOT fabricate findings.
 
-Analyze the 4 CORE structural indicators:
-1. CRACKS: Structural, shear, longitudinal, or tension cracks on concrete, masonry, or embankment crest.
+For each of the following, assess the severity:
+
+1. CRACKS: Look for visible cracks on surfaces, walls, slopes
    Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
-2. EROSION: Slope scouring, soil wash-out, foundation exposure, or toe wash-away.
+
+2. EROSION: Look for soil loss, surface erosion, wash-away, exposed foundations
    Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
-3. SEEPAGE: Active water leakage, piping boils, saturated damp zones, or wet stains.
+
+3. SEEPAGE: Look for water coming through structure, moisture stains, wet patches
    Severity: "none" | "suspected" | "visible" | "severe" | "cannot_determine"
-4. SETTLEMENT: Crest depression, slope slump, bulging deformation, or displacement.
+
+4. SETTLEMENT: Look for sinking, depressions, uneven surfaces, tilting
    Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
 
-ADDITIONAL DYNAMIC DAMAGE CARDS:
-If you observe ANY other specific structural defects (e.g. "Toe Scouring", "Spillway Obstruction", "Culvert Fracture", "Revetment Collapse", "Slope Slumping", "Vegetation Root Wedging", "Retaining Wall Bulge"), generate a dedicated assessment card for each inside "additional_damage_assessments".
+For each finding, provide:
+- severity: one of the options above
+- confidence: 0.0 to 1.0 (how confident you are in this assessment)
+- explanation: brief description of what you observe (1-2 sentences)
 
-REALISTIC AI RISK SCORE:
-Evaluate the realistic probability of structural breach, slope collapse, or hazard to human life/property.
-- ai_risk_score: An integer from 0 to 100 representing the true contextual risk. (0-24 = Low / Healthy, 25-49 = Moderate, 50-74 = High, 75-100 = Critical Danger). If severe damage, deep cracks, or slope wash-out is visible, assign 75-95+.
-- ai_risk_level: "low" | "moderate" | "high" | "critical"
-- risk_factors_analysis: 1-2 sentence engineering justification explaining what specific visual defects drove this risk score.
+Also identify any additional visible issues from this list:
+- surface erosion, slope deformation, vegetation-related damage, surface collapse
+- drainage problems, scouring, structural surface damage, debris obstruction
+- exposed soil, other visible concerns
+
+IMPORTANT: Clearly distinguish between what is OBSERVED and what is NOT visually determinable.
 
 {user_context}
 
@@ -59,18 +66,7 @@ Respond ONLY with a valid JSON object (no markdown, no code fences):
     "confidence": 0.0,
     "explanation": "..."
   }},
-  "additional_damage_assessments": [
-    {{
-      "title": "Toe Scouring / Specific Defect Name",
-      "severity": "moderate",
-      "confidence": 0.85,
-      "explanation": "Detailed engineering observation of this specific defect."
-    }}
-  ],
-  "additional_issues": ["scouring", "vegetation growth"],
-  "ai_risk_score": 78,
-  "ai_risk_level": "critical",
-  "risk_factors_analysis": "Severe bank scouring combined with longitudinal tension cracks poses immediate breach risk during high water flow.",
+  "additional_issues": ["issue1", "issue2"],
   "summary": "Brief overall assessment summary (2-3 sentences)"
 }}"""
 
@@ -133,7 +129,7 @@ async def assess_structure(
     
     Returns:
         dict with cracks, erosion, seepage, settlement findings,
-        additional_damage_assessments list, ai_risk_score, and summary.
+        additional_issues list, and summary.
     """
     # Build user context from provided metadata
     context_parts = []
@@ -157,7 +153,7 @@ async def assess_structure(
 
     prompt = ASSESSMENT_PROMPT.format(user_context=user_context)
 
-    # 1. Try primary AI vision engine: Google Gemini
+    # 1. Try primary AI vision engine: Google Gemini 3.6 Flash
     if GEMINI_API_KEY:
         try:
             import io
@@ -166,7 +162,7 @@ async def assess_structure(
 
             genai.configure(api_key=GEMINI_API_KEY)
             pil_image = Image.open(io.BytesIO(image_bytes))
-            gemini_models = ["gemini-flash-latest", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.7-flash"]
+            gemini_models = ["gemini-3.6-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-flash-latest"]
 
             for m_name in gemini_models:
                 try:
@@ -237,38 +233,8 @@ def _normalize_assessment(result: dict) -> dict:
         result["seepage"].setdefault("confidence", 0.5)
         result["seepage"].setdefault("explanation", "")
 
-    # Parse and validate dynamic additional damage cards
-    additional_findings = []
-    raw_add = result.get("additional_damage_assessments", [])
-    if isinstance(raw_add, list):
-        for item in raw_add:
-            if isinstance(item, dict) and item.get("title"):
-                additional_findings.append({
-                    "title": str(item.get("title", "Structural Anomaly")),
-                    "severity": str(item.get("severity", "moderate")),
-                    "confidence": float(item.get("confidence", 0.8)),
-                    "explanation": str(item.get("explanation", "")),
-                })
-    result["additional_damage_assessments"] = additional_findings
-
     result.setdefault("additional_issues", [])
     result.setdefault("summary", "Assessment completed based on visual analysis.")
-
-    # Validate AI risk score if present
-    if "ai_risk_score" in result:
-        try:
-            result["ai_risk_score"] = max(0, min(100, int(result["ai_risk_score"])))
-        except (ValueError, TypeError):
-            result["ai_risk_score"] = None
-
-    if "ai_risk_level" not in result or result["ai_risk_level"] not in ("low", "moderate", "high", "critical"):
-        if result.get("ai_risk_score") is not None:
-            score = result["ai_risk_score"]
-            result["ai_risk_level"] = "critical" if score >= 75 else "high" if score >= 50 else "moderate" if score >= 25 else "low"
-        else:
-            result["ai_risk_level"] = None
-
-    result.setdefault("risk_factors_analysis", "")
 
     return result
 
