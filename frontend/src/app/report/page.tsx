@@ -448,7 +448,9 @@ export default function ReportPage() {
   return (
     <div className="min-h-screen py-8 px-4">
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-2xl font-bold mb-6">{t('nav.report')}</h1>
+        {(stage === 'upload' || stage === 'form') && (
+          <h1 className="text-2xl font-bold mb-6">{t('nav.report')}</h1>
+        )}
 
         {/* STAGE: Upload */}
         {stage === 'upload' && (
@@ -460,93 +462,34 @@ export default function ReportPage() {
           />
         )}
 
-        {/* STAGE: Quality Check */}
+        {/* STAGE: Quality Check (Clean, Minimized & Centered) */}
         {stage === 'quality' && (
-          <Card className="border-2 border-primary/30 bg-card shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
-            <CardHeader className="text-center pb-2 bg-gradient-to-b from-primary/10 to-transparent border-b border-border/50">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-xs font-mono font-bold text-primary mx-auto mb-1">
-                <Scan className="h-3.5 w-3.5 animate-pulse text-primary" />
-                <span>AI OPTICAL VERIFICATION</span>
-              </div>
-              <CardTitle className="text-xl font-bold tracking-tight">{t('quality.checking')}</CardTitle>
-              <p className="text-xs text-muted-foreground">Evaluating camera sharpness, blur metrics, and infrastructure relevance</p>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              {/* Photo Scanning Box with Optical Reticle */}
-              {previewUrl && (
-                <div className="relative h-56 sm:h-64 rounded-2xl overflow-hidden border-2 border-primary/40 shadow-xl bg-slate-950 group">
-                  <img
-                    src={previewUrl}
-                    alt="Quality Evaluation"
-                    className="w-full h-full object-cover opacity-85 filter contrast-105"
-                  />
-
-                  {/* High-Tech Shimmer Grid */}
-                  <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:20px_20px] opacity-20 pointer-events-none" />
-
-                  {/* Scanning Laser Beam moving down and up */}
-                  <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_20px_#38bdf8] animate-[bounce_1.8s_infinite] top-0" />
-
-                  {/* Optical Reticle Crosshairs in Center */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="relative w-24 h-24 rounded-full border border-cyan-400/40 flex items-center justify-center animate-pulse">
-                      <div className="w-16 h-16 rounded-full border border-dashed border-cyan-300/60 animate-spin" />
-                      <div className="absolute w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
-                      <div className="absolute -top-2 text-[9px] font-mono text-cyan-300 font-bold tracking-wider">FOCUS</div>
-                    </div>
+          <div className="min-h-[60vh] flex items-center justify-center">
+            <Card className="max-w-md w-full border border-border/80 bg-card shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+              <CardContent className="p-6 sm:p-8 text-center space-y-4">
+                {previewUrl ? (
+                  <div className="relative w-20 h-20 mx-auto rounded-2xl overflow-hidden bg-muted border-2 border-primary/30 shadow-md">
+                    <img src={previewUrl} alt="Quality check" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-primary/10" />
+                    <div className="absolute inset-x-0 h-0.5 bg-cyan-400 shadow-[0_0_8px_#38bdf8] animate-[bounce_1.5s_infinite] top-0" />
                   </div>
-
-                  {/* Corner Target Brackets */}
-                  <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-cyan-400" />
-                  <div className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-cyan-400" />
-                  <div className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-cyan-400" />
-                  <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-cyan-400" />
-
-                  {/* Bottom Real-Time Telemetry Bar */}
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-slate-900/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-cyan-500/30 text-white text-xs font-mono">
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="h-3.5 w-3.5 text-cyan-400 animate-spin" />
-                      <span className="font-semibold text-cyan-300">MEASURING LAPLACIAN VARIANCE</span>
-                    </div>
-                    <span className="text-slate-400 text-[10px] hidden sm:inline">EDGE CONTRAST ENGINE</span>
+                ) : (
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <Loader2 className="h-8 w-8 animate-spin" />
                   </div>
+                )}
+
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                    <Scan className="h-3.5 w-3.5 animate-pulse" />
+                    <span>Optical Verification</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground tracking-tight">{t('quality.checking')}</h3>
+                  <p className="text-xs text-muted-foreground">Checking sharpness, blur variance, and infrastructure relevance...</p>
                 </div>
-              )}
-
-              {/* Three Diagnostic Checklist Badges */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3 rounded-xl border border-border/80 bg-muted/30 flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
-                    <Focus className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-foreground">Sharpness</p>
-                    <p className="text-[10px] text-muted-foreground truncate">Checking blur variance</p>
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl border border-border/80 bg-muted/30 flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
-                    <Eye className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-foreground">Exposure</p>
-                    <p className="text-[10px] text-muted-foreground truncate">Lighting & resolution</p>
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl border border-border/80 bg-muted/30 flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 shrink-0">
-                    <ShieldCheck className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold text-foreground">Relevance</p>
-                    <p className="text-[10px] text-muted-foreground truncate">Structure validation</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {/* STAGE: Relevance Failed */}
@@ -793,39 +736,40 @@ export default function ReportPage() {
           </div>
         )}
 
-        {/* STAGE: Processing */}
+        {/* STAGE: Processing (Clean, Minimized & Centered) */}
         {stage === 'processing' && (
-          <Card className="border border-border/80 bg-card shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <CardContent className="p-6 sm:p-8 space-y-6">
-              <div className="flex items-center gap-4">
-                {previewUrl ? (
-                  <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-muted shrink-0 border border-primary/30 shadow-xs">
-                    <img src={previewUrl} alt="Analyzing" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-primary/10" />
-                    <div className="absolute inset-x-0 h-0.5 bg-primary shadow-[0_0_8px_currentColor] animate-[bounce_1.5s_infinite] top-0" />
-                  </div>
-                ) : (
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                  </div>
-                )}
+          <div className="min-h-[60vh] flex items-center justify-center">
+            <Card className="max-w-md w-full border border-border/80 bg-card shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+              <CardContent className="p-6 sm:p-7 space-y-4">
+                <div className="flex items-center gap-3.5">
+                  {previewUrl ? (
+                    <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-muted shrink-0 border border-primary/30 shadow-xs">
+                      <img src={previewUrl} alt="Analyzing" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-primary/10" />
+                      <div className="absolute inset-x-0 h-0.5 bg-primary shadow-[0_0_8px_currentColor] animate-[bounce_1.5s_infinite] top-0" />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                    </div>
+                  )}
 
-                <div className="min-w-0 flex-1">
-                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-[11px] font-medium text-primary mb-1">
-                    <Sparkles className="h-3 w-3" />
-                    <span>AI Structural Analysis</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-[11px] font-medium text-primary mb-1">
+                      <Sparkles className="h-3 w-3" />
+                      <span>AI Structural Analysis</span>
+                    </div>
+                    <h3 className="text-base font-bold text-foreground tracking-tight leading-tight">{t('processing.title')}</h3>
                   </div>
-                  <h3 className="text-lg font-bold text-foreground tracking-tight leading-tight">{t('processing.title')}</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">Evaluating structural damage and computing explainable risk score...</p>
                 </div>
-              </div>
 
-              {/* Progress Steps List */}
-              <div className="bg-muted/40 p-4 rounded-xl border border-border/50">
-                <ProgressSteps steps={processingSteps.map((s) => ({ key: s.key, label: t(`processing.${s.key}`), status: s.status }))} />
-              </div>
-            </CardContent>
-          </Card>
+                {/* Progress Steps List */}
+                <div className="bg-muted/40 p-3.5 rounded-xl border border-border/50">
+                  <ProgressSteps steps={processingSteps.map((s) => ({ key: s.key, label: t(`processing.${s.key}`), status: s.status }))} />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {/* STAGE: Complete Celebration Modal */}
