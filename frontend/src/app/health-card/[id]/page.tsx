@@ -62,8 +62,23 @@ export default function HealthCardPage() {
     );
   }
 
+  const effectiveObservations = {
+    cracks: (report.assessment?.cracks?.severity && report.assessment.cracks.severity !== 'cannot_determine')
+      ? report.assessment.cracks.severity
+      : report.observations?.cracks || 'none',
+    erosion: (report.assessment?.erosion?.severity && report.assessment.erosion.severity !== 'cannot_determine')
+      ? report.assessment.erosion.severity
+      : report.observations?.erosion || 'none',
+    seepage: (report.assessment?.seepage?.severity && report.assessment.seepage.severity !== 'cannot_determine')
+      ? report.assessment.seepage.severity
+      : report.observations?.seepage || 'none',
+    settlement: (report.assessment?.settlement?.severity && report.assessment.settlement.severity !== 'cannot_determine')
+      ? report.assessment.settlement.severity
+      : report.observations?.settlement || 'none',
+  };
+
   const riskBreakdown = report.riskBreakdown || calculateRisk(
-    report.observations,
+    effectiveObservations as any,
     report.additionalIssues,
     report.communityReports,
     report.unresolvedCommunityReports
@@ -273,10 +288,10 @@ export default function HealthCardPage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-3">
-              <HealthMetric label={`assetIndicators.${report.assetType}.cracks`} severity={report.observations.cracks} explanation={report.assessment?.cracks?.explanation} />
-              <HealthMetric label={`assetIndicators.${report.assetType}.erosion`} severity={report.observations.erosion} explanation={report.assessment?.erosion?.explanation} />
-              <HealthMetric label={`assetIndicators.${report.assetType}.seepage`} severity={report.observations.seepage} explanation={report.assessment?.seepage?.explanation} />
-              <HealthMetric label={`assetIndicators.${report.assetType}.settlement`} severity={report.observations.settlement} explanation={report.assessment?.settlement?.explanation} />
+              <HealthMetric label={`assetIndicators.${report.assetType}.cracks`} severity={effectiveObservations.cracks} explanation={report.assessment?.cracks?.explanation} />
+              <HealthMetric label={`assetIndicators.${report.assetType}.erosion`} severity={effectiveObservations.erosion} explanation={report.assessment?.erosion?.explanation} />
+              <HealthMetric label={`assetIndicators.${report.assetType}.seepage`} severity={effectiveObservations.seepage} explanation={report.assessment?.seepage?.explanation} />
+              <HealthMetric label={`assetIndicators.${report.assetType}.settlement`} severity={effectiveObservations.settlement} explanation={report.assessment?.settlement?.explanation} />
             </div>
           </CardContent>
         </Card>

@@ -385,6 +385,22 @@ export default function ReportPage() {
       const engineerReports = getEngineerReports(assetName);
 
       const reportId = generateReportId();
+      const fallbackObservations = {
+        cracks: hasCracks ? 'moderate' : 'none',
+        erosion: hasErosion ? 'severe' : 'none',
+        seepage: hasSeepage ? 'visible' : 'none',
+        settlement: hasSettlement ? 'minor' : 'none',
+      };
+
+      const fallbackAssessment = {
+        cracks: { severity: fallbackObservations.cracks, confidence: 0.85, explanation: hasCracks ? 'Visible surface cracking noted in user observation.' : 'No prominent cracks observed.' },
+        erosion: { severity: fallbackObservations.erosion, confidence: 0.85, explanation: hasErosion ? 'Significant embankment slope erosion or wash-away noted.' : 'No major slope erosion observed.' },
+        seepage: { severity: fallbackObservations.seepage, confidence: 0.85, explanation: hasSeepage ? 'Water seepage or moisture accumulation observed on structure.' : 'No active seepage observed.' },
+        settlement: { severity: fallbackObservations.settlement, confidence: 0.85, explanation: hasSettlement ? 'Depression or slope displacement detected.' : 'No major settlement observed.' },
+        additionalIssues: selectedObs.length > 0 ? selectedObs : ['Field inspection requested'],
+        summary: 'Preliminary assessment created from citizen field observations. Flagged for site inspection by local authorities.',
+      };
+
       const report: Report = {
         id: reportId,
         assetName,
@@ -392,13 +408,9 @@ export default function ReportPage() {
         location,
         image: imageData,
         description,
-        observations: {
-          cracks: hasCracks ? 'moderate' : 'none',
-          erosion: hasErosion ? 'severe' : 'none',
-          seepage: hasSeepage ? 'visible' : 'none',
-          settlement: hasSettlement ? 'minor' : 'none',
-        },
+        observations: fallbackObservations as Report['observations'],
         additionalIssues: selectedObs.length > 0 ? selectedObs : ['Manual inspection requested'],
+        assessment: fallbackAssessment as any,
         communityReports: community?.communityReports || 0,
         unresolvedCommunityReports: community?.unresolvedReports || 0,
         communityData: community || undefined,
@@ -406,6 +418,16 @@ export default function ReportPage() {
         engineerReportData: engineerReports,
         riskScore: computedScore,
         riskLevel: computedLevel,
+        riskBreakdown: {
+          cracksScore: hasCracks ? 50 : 0,
+          erosionScore: hasErosion ? 100 : 0,
+          seepageScore: hasSeepage ? 50 : 0,
+          settlementScore: hasSettlement ? 25 : 0,
+          additionalScore: selectedObs.length > 0 ? 50 : 0,
+          communityScore: (community?.communityReports || 0) > 0 ? 50 : 0,
+          totalScore: computedScore,
+          riskLevel: computedLevel,
+        },
         recommendedAction: 'Field inspection recommended: Report logged from citizen observations. A site visit by irrigation engineers is required to perform an official evaluation.',
         status: 'manual_inspection_needed',
         createdAt: new Date().toISOString(),
