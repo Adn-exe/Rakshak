@@ -39,11 +39,13 @@ app.include_router(health_card.router, prefix="/api", tags=["Demo Data"])
 async def health_check():
     """Simple backend health endpoint."""
     gemini_key = os.getenv("GEMINI_API_KEY", "")
+    groq_key = os.getenv("GROQ_API_KEY", "")
     return {
         "status": "healthy",
-        "service": "JalRaksha API",
+        "service": "Rakshak API",
         "version": "1.0.0",
         "gemini_configured": bool(gemini_key and gemini_key != "your_gemini_api_key_here"),
+        "groq_configured": bool(groq_key and groq_key != "your_groq_api_key_here"),
     }
 
 

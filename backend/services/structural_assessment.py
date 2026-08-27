@@ -10,6 +10,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
 ASSESSMENT_PROMPT = """You are a structural assessment system for JalRaksha, an infrastructure health monitoring platform.
 
@@ -70,6 +71,51 @@ Respond ONLY with a valid JSON object (no markdown, no code fences):
 }}"""
 
 
+def _assess_with_groq(image_bytes: bytes, prompt: str) -> dict | None:
+    """Fallback photo assessment using Groq Llama 3.2 Vision API."""
+    if not GROQ_API_KEY:
+        return None
+    try:
+        from groq import Groq
+        client = Groq(api_key=GROQ_API_KEY)
+        base64_image = base64.b64encode(image_bytes).decode("utf-8")
+
+        models = ["llama-3.2-11b-vision-preview", "llama-3.2-90b-vision-preview"]
+        for m in models:
+            try:
+                completion = client.chat.completions.create(
+                    model=m,
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt},
+                                {
+                                    "type": "image_url",
+                                    "image_url": {
+                                        "url": f"data:image/jpeg;base64,{base64_image}"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    temperature=0.1,
+                    max_tokens=1024,
+                    response_format={"type": "json_object"}
+                )
+                text = completion.choices[0].message.content.strip()
+                result = json.loads(text)
+                logger.info(f"Successfully completed AI photo assessment using Groq ({m})")
+                return result
+            except Exception as e:
+                logger.warning(f"Groq model {m} failed: {e}")
+                continue
+        return None
+    except Exception as e:
+        logger.error(f"Groq vision assessment error: {e}")
+        return None
+
+
 async def assess_structure(
     image_bytes: bytes,
     mime_type: str = "image/jpeg",
@@ -79,74 +125,74 @@ async def assess_structure(
     observations: dict | None = None,
 ) -> dict:
     """
-    Perform structural assessment on an infrastructure image using Gemini.
+    Perform structural assessment on an infrastructure image using Gemini with Groq fallback.
     
     Returns:
         dict with cracks, erosion, seepage, settlement findings,
         additional_issues list, and summary.
     """
-    if not GEMINI_API_KEY:
-        logger.warning("No GEMINI_API_KEY configured, using demo fallback")
-        return _demo_fallback(observations)
+    # Build user context from provided metadata
+    context_parts = []
+    if asset_name:
+        context_parts.append(f"Asset: {asset_name}")
+    if asset_type:
+        context_parts.append(f"Type: {asset_type}")
+    if description:
+        context_parts.append(f"User description: {description}")
+    if observations:
+        obs_parts = []
+        for key, val in observations.items():
+            if val and val != "not_sure":
+                obs_parts.append(f"User field observations: {val}")
+        if obs_parts:
+            context_parts.append("; ".join(obs_parts))
 
-    try:
-        import io
-        from PIL import Image
-        import google.generativeai as genai
+    user_context = ""
+    if context_parts:
+        user_context = "Additional context provided by reporter:\n" + "\n".join(context_parts)
 
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel("gemini-3.6-flash")
+    prompt = ASSESSMENT_PROMPT.format(user_context=user_context)
 
-        # Build user context from provided metadata
-        context_parts = []
-        if asset_name:
-            context_parts.append(f"Asset: {asset_name}")
-        if asset_type:
-            context_parts.append(f"Type: {asset_type}")
-        if description:
-            context_parts.append(f"User description: {description}")
-        if observations:
-            obs_parts = []
-            for key, val in observations.items():
-                if val and val != "not_sure":
-                    obs_parts.append(f"User observed {key}: {val}")
-            if obs_parts:
-                context_parts.append("User field observations: " + "; ".join(obs_parts))
+    # 1. Try primary AI vision engine: Google Gemini 3.6 Flash
+    if GEMINI_API_KEY:
+        try:
+            import io
+            from PIL import Image
+            import google.generativeai as genai
 
-        user_context = ""
-        if context_parts:
-            user_context = "Additional context provided by reporter:\n" + "\n".join(context_parts)
+            genai.configure(api_key=GEMINI_API_KEY)
+            model = genai.GenerativeModel("gemini-3.6-flash")
 
-        prompt = ASSESSMENT_PROMPT.format(user_context=user_context)
+            pil_image = Image.open(io.BytesIO(image_bytes))
 
-        # Open PIL image for native Gemini Multimodal analysis
-        pil_image = Image.open(io.BytesIO(image_bytes))
+            response = model.generate_content(
+                [
+                    prompt,
+                    pil_image,
+                ],
+                generation_config=genai.types.GenerationConfig(
+                    response_mime_type="application/json",
+                    temperature=0.1,
+                    max_output_tokens=1024,
+                ),
+            )
 
-        response = model.generate_content(
-            [
-                prompt,
-                pil_image,
-            ],
-            generation_config=genai.types.GenerationConfig(
-                response_mime_type="application/json",
-                temperature=0.1,
-                max_output_tokens=1024,
-            ),
-        )
+            text = response.text.strip()
+            result = json.loads(text)
+            logger.info("Successfully completed AI multimodal photo assessment using Gemini 3.6 Flash")
+            return _normalize_assessment(result)
+        except Exception as e:
+            logger.warning(f"Gemini photo assessment failed/unavailable ({e}), failing over to Groq AI...")
 
-        text = response.text.strip()
-        result = json.loads(text)
-        logger.info("Successfully completed AI multimodal photo assessment using gemini-3.6-flash")
+    # 2. Try secondary AI vision engine: Groq (Llama 3.2 Vision)
+    if GROQ_API_KEY:
+        groq_result = _assess_with_groq(image_bytes, prompt)
+        if groq_result:
+            return _normalize_assessment(groq_result)
 
-        # Validate and normalize the response
-        return _normalize_assessment(result)
-
-    except json.JSONDecodeError as e:
-        logger.error(f"Failed to parse Gemini assessment response: {e}")
-        return _demo_fallback(observations)
-    except Exception as e:
-        logger.error(f"Gemini structural assessment failed: {e}")
-        return _demo_fallback(observations)
+    # 3. Fallback if both primary and secondary AI engines fail
+    logger.warning("No AI vision service available, using observation fallback")
+    return _demo_fallback(observations)
 
 
 def _normalize_assessment(result: dict) -> dict:
