@@ -12,23 +12,23 @@ interface HealthMetricProps {
 }
 
 const SEVERITY_COLORS: Record<string, string> = {
-  none: 'text-muted-foreground',
-  minor: 'text-green-600',
-  moderate: 'text-amber-600',
-  severe: 'text-red-600',
-  visible: 'text-orange-600',
-  suspected: 'text-amber-500',
-  cannot_determine: 'text-muted-foreground',
+  none: 'text-emerald-700 dark:text-emerald-300 font-semibold',
+  minor: 'text-blue-700 dark:text-blue-300 font-bold',
+  moderate: 'text-amber-700 dark:text-amber-300 font-bold',
+  severe: 'text-red-700 dark:text-red-300 font-bold',
+  visible: 'text-orange-700 dark:text-orange-300 font-bold',
+  suspected: 'text-amber-700 dark:text-amber-300 font-bold',
+  cannot_determine: 'text-slate-600 dark:text-slate-400 font-medium',
 };
 
 const SEVERITY_BG: Record<string, string> = {
-  none: 'bg-muted',
-  minor: 'bg-green-50',
-  moderate: 'bg-amber-50',
-  severe: 'bg-red-50',
-  visible: 'bg-orange-50',
-  suspected: 'bg-amber-50',
-  cannot_determine: 'bg-muted',
+  none: 'bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-500/30',
+  minor: 'bg-blue-50/60 dark:bg-blue-950/30 border border-blue-500/30',
+  moderate: 'bg-amber-50 dark:bg-amber-950/30 border border-amber-500/40',
+  severe: 'bg-red-50 dark:bg-red-950/30 border border-red-500/40',
+  visible: 'bg-orange-50 dark:bg-orange-950/30 border border-orange-500/40',
+  suspected: 'bg-amber-50 dark:bg-amber-950/30 border border-amber-500/40',
+  cannot_determine: 'bg-muted/40 border border-border/50',
 };
 
 export function HealthMetric({ label, severity, explanation }: HealthMetricProps) {

@@ -65,19 +65,22 @@ export default function HealthCardPage() {
     );
   }
 
+  const getDisplaySeverity = (field: 'cracks' | 'erosion' | 'seepage' | 'settlement') => {
+    const aiSev = report.assessment?.[field]?.severity;
+    if (aiSev && aiSev !== 'cannot_determine') return aiSev;
+
+    const obsSev = report.observations?.[field];
+    if (obsSev && obsSev !== 'cannot_determine') return obsSev;
+
+    if (aiSev) return aiSev;
+    return obsSev || 'none';
+  };
+
   const effectiveObservations = {
-    cracks: (report.assessment?.cracks?.severity && report.assessment.cracks.severity !== 'cannot_determine')
-      ? report.assessment.cracks.severity
-      : report.observations?.cracks || 'none',
-    erosion: (report.assessment?.erosion?.severity && report.assessment.erosion.severity !== 'cannot_determine')
-      ? report.assessment.erosion.severity
-      : report.observations?.erosion || 'none',
-    seepage: (report.assessment?.seepage?.severity && report.assessment.seepage.severity !== 'cannot_determine')
-      ? report.assessment.seepage.severity
-      : report.observations?.seepage || 'none',
-    settlement: (report.assessment?.settlement?.severity && report.assessment.settlement.severity !== 'cannot_determine')
-      ? report.assessment.settlement.severity
-      : report.observations?.settlement || 'none',
+    cracks: getDisplaySeverity('cracks'),
+    erosion: getDisplaySeverity('erosion'),
+    seepage: getDisplaySeverity('seepage'),
+    settlement: getDisplaySeverity('settlement'),
   };
 
   const riskBreakdown = report.riskBreakdown || calculateRisk(

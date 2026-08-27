@@ -17,20 +17,20 @@ Carefully inspect this photograph at pixel level for structural defects, distres
 
 For each of the following 4 structural indicators, assess the severity:
 
-1. CRACKS: Look for visible cracks on surfaces, concrete, walls, slopes
-   Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
+1. CRACKS: Look for visible cracks on surfaces, concrete, walls, slopes, embankment crests
+   Severity: "none" | "minor" | "moderate" | "severe"
 
-2. EROSION: Look for soil loss, surface erosion, wash-away, exposed foundations, scouring
-   Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
+2. EROSION: Look for soil loss, surface erosion, wash-away, exposed foundations, scouring, toe erosion
+   Severity: "none" | "minor" | "moderate" | "severe"
 
 3. SEEPAGE: Look for water coming through structure, moisture stains, wet patches, piping boils
-   Severity: "none" | "suspected" | "visible" | "severe" | "cannot_determine"
+   Severity: "none" | "suspected" | "visible" | "severe"
 
-4. SETTLEMENT: Look for sinking, depressions, uneven surfaces, tilting, slope slump
-   Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
+4. SETTLEMENT: Look for sinking, depressions, uneven surfaces, tilting, slope slump, embankment subsidence
+   Severity: "none" | "minor" | "moderate" | "severe"
 
 For each finding, provide:
-- severity: one of the options above
+- severity: strictly one of the allowed severity strings above
 - confidence: 0.0 to 1.0 (how confident you are in this assessment)
 - explanation: detailed, professional engineering description of what you observe in the photo (1-2 sentences)
 
@@ -38,8 +38,6 @@ Also identify any additional visible issues from this list:
 - surface erosion, slope deformation, vegetation-related damage, surface collapse
 - drainage problems, scouring, structural surface damage, debris obstruction
 - exposed soil, other visible concerns
-
-IMPORTANT: Clearly distinguish between what is OBSERVED in the photo and what is NOT visually determinable.
 
 {user_context}
 
