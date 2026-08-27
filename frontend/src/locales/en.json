@@ -1,0 +1,329 @@
+{
+  "app": {
+    "name": "Rakshak",
+    "tagline": "See a risk. Report it. Prevent failure.",
+    "shortTagline": "Protecting citizen infrastructure, together.",
+    "disclaimer": "Rakshak provides a preliminary visual assessment based on submitted evidence. It does not replace an on-site inspection or professional structural assessment."
+  },
+  "nav": {
+    "home": "Home",
+    "report": "Report",
+    "map": "Infrastructure Map",
+    "healthCards": "Health Cards",
+    "about": "About",
+    "dashboard": "Authority Dashboard",
+    "exitDashboard": "Exit to Citizen View",
+    "authorityPortal": "Authority Portal",
+    "language": "Language"
+  },
+  "hero": {
+    "title": "Spot structural damage. Prevent failure.",
+    "subtitle": "Upload photographs of river embankments, canals, roads, or dams. Rakshak generates an explainable Health Card and alerts authorities early.",
+    "cta": "Report an Issue",
+    "ctaSecondary": "View Health Cards",
+    "instructionsTitle": "Quick Field Guide",
+    "step1": "1. Take a clear, bright photo of the affected structure",
+    "step2": "2. Confirm location & asset type",
+    "step3": "3. Receive instant Risk Card & alert authorities"
+  },
+  "upload": {
+    "title": "Upload infrastructure photo",
+    "formats": "JPG, PNG or WEBP · Max 10 MB",
+    "choosePhoto": "Choose Photo",
+    "useCamera": "Use Camera",
+    "hint": "Capture the structure clearly. Avoid blurry, dark or unrelated images.",
+    "continue": "Continue",
+    "change": "Change",
+    "remove": "Remove",
+    "dimensions": "Dimensions",
+    "fileSize": "File size",
+    "dragDrop": "Drag and drop your photo here"
+  },
+  "quality": {
+    "checking": "Checking photo quality...",
+    "good": "Photo quality looks good.",
+    "borderline": "This photo may be slightly unclear. A clearer photo will produce a better assessment.",
+    "blurry": "This photo is too blurry to assess reliably.",
+    "useAnyway": "Use Anyway",
+    "uploadAnother": "Upload Another"
+  },
+  "relevance": {
+    "title": "Relevance Check",
+    "checking": "Verifying infrastructure relevance...",
+    "relevant": "Infrastructure detected.",
+    "irrelevant": "This photograph does not appear to show river embankments, canals, road embankments, railways, or dam structures. Please upload a clear photo of affected infrastructure.",
+    "uploadAnother": "Upload Another Photo"
+  },
+  "reportForm": {
+    "title": "Report Details",
+    "location": "Location",
+    "locationDetected": "GPS Location Attached",
+    "useMyLocation": "Use My Current Location",
+    "assetType": "Infrastructure Type",
+    "assetTypePlaceholder": "Select type...",
+    "assetName": "Structure Name / Location",
+    "assetNamePlaceholder": "e.g., Krishna River Embankment near Vijayawada",
+    "assetNameHelper": "Name or describe the location of this structure",
+    "description": "Additional Notes (Optional)",
+    "descriptionPlaceholder": "Describe any visible issues (e.g., cracks, water leaks, soil washing away)...",
+    "voiceInput": "Describe by Voice",
+    "listening": "Listening...",
+    "submit": "Analyze & Generate Health Card"
+  },
+  "assetTypes": {
+    "river_embankment": "River Embankment",
+    "canal_embankment": "Canal Bank",
+    "road_embankment": "Road Embankment",
+    "railway_embankment": "Railway Embankment",
+    "dam_reservoir": "Dam / Reservoir"
+  },
+  "observations": {
+    "title": "Visible Damage Options (Optional)",
+    "seepage": "Is water leaking through the structure?",
+    "cracks": "Are there visible cracks on the surface?",
+    "settlement": "Is the ground or wall sinking?",
+    "erosion": "Is soil washing away?",
+    "yes": "Yes",
+    "no": "No",
+    "not_sure": "Not Sure"
+  },
+  "processing": {
+    "title": "Analyzing Infrastructure Photo...",
+    "photoVerified": "Image quality verified",
+    "locationAdded": "Location data attached",
+    "assetIdentified": "Asset type identified",
+    "assessingConditions": "Assessing structural risk factors",
+    "preparingCard": "Generating Embankment Health Card"
+  },
+  "healthCard": {
+    "title": "Structure Health Card",
+    "riskScore": "Structural Risk Score",
+    "riskLevel": "Risk Level",
+    "explainableScore": "Explainable Risk Breakdown",
+    "erosion": "Soil Erosion",
+    "seepage": "Water Leakage",
+    "cracks": "Structural Cracks",
+    "settlement": "Ground Sinking",
+    "communityReports": "Community Reports",
+    "recommendedAction": "Recommended Action",
+    "viewOnMap": "View on Map",
+    "share": "Share Health Card",
+    "downloadPdf": "Download PDF Card",
+    "language": "Language",
+    "assetDetails": "Structure Details",
+    "healthCardId": "Health Card ID",
+    "assetType": "Structure Type",
+    "coordinates": "GPS Coordinates",
+    "reportDate": "Reported On",
+    "structuralIndicators": "Structural Damage Assessment",
+    "visibleIssues": "Reported Field Damage",
+    "totalReports": "Total Reports",
+    "unresolvedReports": "Unresolved Reports",
+    "latestReport": "Latest Report",
+    "noCommunityData": "No community reports recorded for this structure.",
+    "engineerReports": "Engineer Inspection Reports",
+    "inspections": "Inspections Recorded",
+    "latestInspection": "Latest Inspection",
+    "currentStatus": "Current Status",
+    "noEngineerData": "No engineer inspection reports recorded yet.",
+    "riskExplanation": "Risk Score Breakdown"
+  },
+  "status": {
+    "new": "New Report",
+    "under_review": "Under Review",
+    "inspection_required": "Field Inspection Required",
+    "action_recommended": "Action Recommended",
+    "manual_inspection_needed": "Manual Inspection Needed (AI Offline)",
+    "resolved": "Resolved"
+  },
+  "severity": {
+    "none": "None",
+    "minor": "Minor",
+    "moderate": "Moderate",
+    "severe": "Severe",
+    "visible": "Visible",
+    "suspected": "Suspected",
+    "cannot_determine": "Unclear"
+  },
+  "risk": {
+    "score": "Risk Score",
+    "level": "Risk Level",
+    "low": "Low Risk",
+    "moderate": "Moderate Risk",
+    "high": "High Risk",
+    "critical": "Critical Risk"
+  },
+  "riskLevel": {
+    "low": "Low Risk",
+    "moderate": "Moderate Risk",
+    "high": "High Risk",
+    "critical": "Critical Risk"
+  },
+  "assetIndicators": {
+    "river_embankment": {
+      "erosion": "Bank Soil Erosion",
+      "seepage": "Base Seepage & Piping",
+      "cracks": "Slope Slumping & Cracks",
+      "settlement": "Surface Sinking"
+    },
+    "canal_embankment": {
+      "erosion": "Canal Berm Erosion",
+      "seepage": "Wall Water Seepage",
+      "cracks": "Concrete Lining Cracks",
+      "settlement": "Canal Bed Siltation / Sinking"
+    },
+    "road_embankment": {
+      "erosion": "Road Shoulder Washout",
+      "seepage": "Culvert Seepage",
+      "cracks": "Retaining Wall Cracks",
+      "settlement": "Pavement Sinking & Sinkhole"
+    },
+    "railway_embankment": {
+      "erosion": "Embankment Slope Gully",
+      "seepage": "Subgrade Dampness / Seepage",
+      "cracks": "Trackbed Cracks & Distortion",
+      "settlement": "Track Ballast Shifting & Sinking"
+    },
+    "dam_reservoir": {
+      "erosion": "Spillway Base Erosion",
+      "seepage": "Downstream Piping & Seepage",
+      "cracks": "Abutment Wall Cracking",
+      "settlement": "Earthen Crest Settlement"
+    }
+  },
+  "healthCards": {
+    "title": "Infrastructure Health Cards",
+    "subtitle": "All reported assets, structural health assessments, and risk scores.",
+    "searchPlaceholder": "Search by name or location...",
+    "allTypes": "All Types",
+    "allRisks": "All Risk Levels",
+    "reported": "Reported on",
+    "viewCard": "View Health Card",
+    "createNew": "Report New Issue",
+    "noReports": "No health cards submitted yet.",
+    "filterAll": "All Risk Cards",
+    "filterLow": "Low Risk",
+    "filterModerate": "Moderate Risk",
+    "filterHigh": "High Risk",
+    "filterCritical": "Critical Risk"
+  },
+  "map": {
+    "title": "Infrastructure Risk Map",
+    "legend": "Risk Levels",
+    "viewHealthCard": "View Health Card",
+    "riskLabel": "Risk Score"
+  },
+  "admin": {
+    "title": "Authority Dashboard",
+    "subtitle": "Monitor priority alerts, update status, and manage infrastructure assets.",
+    "priorityAlerts": "Priority Alerts",
+    "totalReports": "Total Health Cards",
+    "criticalCount": "Critical Risks",
+    "unresolvedCount": "Action Required",
+    "updateStatus": "Update Status",
+    "openReport": "Open Full Report"
+  },
+  "dashboard": {
+    "title": "Authority Dashboard",
+    "subtitle": "Monitor priority alerts, update status, and manage infrastructure assets.",
+    "priorityAlerts": "Priority Alerts",
+    "totalReports": "Total Reports",
+    "criticalCount": "Critical Risks",
+    "highCount": "High Risks",
+    "moderateCount": "Moderate Risks",
+    "lowCount": "Low Risks",
+    "openReport": "Open Report",
+    "noAlerts": "No priority alerts at this time.",
+    "statusUpdated": "Status updated successfully"
+  },
+  "about": {
+    "title": "About Rakshak",
+    "subtitle": "Preventive Action Platform for Infrastructure Safety",
+    "overviewTitle": "Platform Mission",
+    "overviewText": "Infrastructure failures cause severe flooding, loss of life, and economic damage. Rakshak bridges the critical gap between citizen field observations and engineering intervention. By turning a single photograph into an actionable Health Card, Rakshak enables early detection and rapid preventive action.",
+    "workflowTitle": "How Rakshak Works",
+    "step1Title": "1. Field Photograph Capture",
+    "step1Desc": "Citizens or field workers capture photos of suspicious infrastructure damage.",
+    "step2Title": "2. Image Quality & Relevance Verification",
+    "step2Desc": "Laplacian blur analysis verifies image sharpness, and computer vision confirms infrastructure relevance.",
+    "step3Title": "3. Multi-Factor Risk Assessment",
+    "step3Desc": "Visual damage indicators (cracks, erosion, seepage, settlement) are combined with historical community & engineering data.",
+    "step4Title": "4. Structured Health Card Generation",
+    "step4Desc": "An explainable 0–100 structural risk score is generated alongside actionable intervention steps.",
+    "step5Title": "5. Authority Alert & Response",
+    "step5Desc": "High-risk reports are dispatched to local engineers and authorities for prioritized field inspection.",
+    "indicatorsTitle": "Key Structural Failure Indicators",
+    "erosionTitle": "Soil Erosion & Scouring",
+    "erosionDesc": "Loss of protective earth on slopes or embankment toes caused by water currents.",
+    "seepageTitle": "Seepage & Water Piping",
+    "seepageDesc": "Water leaking through or beneath embankments, creating internal erosion pathways.",
+    "cracksTitle": "Structural Cracks",
+    "cracksDesc": "Cracks caused by slope movement or foundation settlement.",
+    "settlementTitle": "Ground Settlement",
+    "settlementDesc": "Downward movement or sinking of the embankment surface.",
+    "methodologyTitle": "Explainable Risk Scoring Engine",
+    "methodologyDesc": "Risk scores are computed deterministically using weighted metrics: Erosion (25%), Cracks (25%), Seepage (20%), Settlement (15%), Additional Issues (10%), and Community History (5%). Scores range from Low (0–24) to Critical (75–100).",
+    "targetAssetsTitle": "Supported Infrastructure Assets",
+    "targetAssetsDesc": "River embankments, canal banks, road embankments, railway slopes, and dam structures.",
+    "noteTitle": "Important Disclaimer",
+    "noteText": "Rakshak provides a preliminary visual assessment based on submitted evidence. It does not replace an on-site professional engineering inspection."
+  },
+  "errors": {
+    "noImage": "Please upload a photo to continue.",
+    "unsupportedFormat": "Please upload JPG, PNG or WEBP.",
+    "blurry": "This photo is too unclear to assess.",
+    "irrelevant": "This image does not appear to show relevant infrastructure.",
+    "locationUnavailable": "We couldn't access your location. Please select the location on the map.",
+    "analysisFailed": "We couldn't complete the assessment. Please try again.",
+    "noReports": "No health cards have been submitted yet.",
+    "tryAgain": "Try Again",
+    "reportNotFound": "Report not found."
+  },
+  "common": {
+    "loading": "Loading...",
+    "back": "Back",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "or": "or"
+  },
+  "obs": {
+    "title": "What damage can you see?",
+    "subtitle": "Tap all the issues you can spot at this location:",
+    "river": {
+      "toeErosion": "Soil washing away at the bottom",
+      "seepagePiping": "Water leaking through the base",
+      "slopeSlumping": "Mud / embankment sliding down",
+      "longitudinalCracks": "Long cracks on top or side",
+      "vegetation": "Overgrown weeds / wild trees damaging bank"
+    },
+    "canal": {
+      "wallSeepage": "Water leaking through wall",
+      "liningCracks": "Cracks in concrete wall",
+      "bermErosion": "Canal side wall breaking",
+      "bedSiltation": "Mud or sand blocking canal",
+      "sluiceDamage": "Damaged water gate or wall"
+    },
+    "road": {
+      "pavementSinkhole": "Road sinking / deep hole",
+      "shoulderErosion": "Road side washing away",
+      "retainingWall": "Side wall bending or cracking",
+      "slopeLandslide": "Landslide / mud sliding onto road",
+      "culvertBlockage": "Blocked water pipe / drain washout"
+    },
+    "railway": {
+      "ballastShift": "Track stones moving / track sinking",
+      "subgradeSlump": "Ground under tracks sinking",
+      "gullyWashout": "Deep water cuts in embankment slope",
+      "trackbedCracks": "Cracks near railway tracks",
+      "hillsideRockfall": "Rocks or mud falling onto tracks"
+    },
+    "dam": {
+      "spillwaySeepage": "Water leaking near spillway",
+      "abutmentCracks": "Cracks in dam side walls",
+      "crestSettlement": "Top of dam sinking down",
+      "downstreamWetspots": "Wet spots or leaks behind dam",
+      "gateDamage": "Damaged water control gate"
+    }
+  }
+}

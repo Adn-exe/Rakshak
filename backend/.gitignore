@@ -1,0 +1,52 @@
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environment & Virtualenvs
+.env
+.env.local
+.env.*.local
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.nox/
+.tox/
+
+# Logs & Databases
+*.log
+*.sqlite
+*.db
+
+# Distribution & Build
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,329 @@
+{
+  "app": {
+    "name": "रक्षक",
+    "tagline": "जोखिम देखें। रिपोर्ट करें। विफलता रोकें।",
+    "shortTagline": "नागरिक अवसंरचना की मिलकर सुरक्षा।",
+    "disclaimer": "रक्षक प्रस्तुत साक्ष्यों के आधार पर एक प्रारंभिक दृश्य मूल्यांकन प्रदान करता है। यह साइट पर निरीक्षण का विकल्प नहीं है।"
+  },
+  "nav": {
+    "home": "होम",
+    "report": "रिपोर्ट करें",
+    "map": "अवसंरचना मानचित्र",
+    "healthCards": "हेल्थ कार्ड्स",
+    "about": "हमारे बारे में",
+    "dashboard": "प्राधिकरण डैशबोर्ड",
+    "exitDashboard": "नागरिक व्यू पर लौटें",
+    "authorityPortal": "प्राधिकरण पोर्टल",
+    "language": "भाषा"
+  },
+  "hero": {
+    "title": "क्षति पहचानें। विफलता रोकें।",
+    "subtitle": "नदी तटबंधों, नहरों, सड़कों या बांधों की तस्वीरें अपलोड करें। रक्षक हेल्थ कार्ड बनाता है और अधिकारियों को सचेत करता है।",
+    "cta": "समस्या रिपोर्ट करें",
+    "ctaSecondary": "हेल्थ कार्ड देखें",
+    "instructionsTitle": "त्वरित निर्देश",
+    "step1": "1. प्रभावित संरचना की स्पष्ट फोटो लें",
+    "step2": "2. स्थान और प्रकार की पुष्टि करें",
+    "step3": "3. हेल्थ कार्ड प्राप्त करें"
+  },
+  "upload": {
+    "title": "अवसंरचना फोटो अपलोड करें",
+    "formats": "JPG, PNG या WEBP · अधिकतम 10 MB",
+    "choosePhoto": "फोटो चुनें",
+    "useCamera": "कैमरा उपयोग करें",
+    "hint": "संरचना की स्पष्ट फोटो लें। धुंधली या अंधेरी फोटो से बचें।",
+    "continue": "आगे बढ़ें",
+    "change": "बदलें",
+    "remove": "हटाएं",
+    "dimensions": "आयाम",
+    "fileSize": "फ़ाइल आकार",
+    "dragDrop": "यहाँ फोटो ड्रैग और ड्रॉप करें"
+  },
+  "quality": {
+    "checking": "फोटो गुणवत्ता की जांच हो रही है...",
+    "good": "फोटो गुणवत्ता अच्छी है।",
+    "borderline": "यह फोटो थोड़ी धुंधली हो सकती है।",
+    "blurry": "यह फोटो अत्यधिक धुंधली है।",
+    "useAnyway": "फिर भी उपयोग करें",
+    "uploadAnother": "दूसरी फोटो अपलोड करें"
+  },
+  "relevance": {
+    "title": "प्रासंगिकता जांच",
+    "checking": "जांच की जा रही है...",
+    "relevant": "अवसंरचना पाई गई।",
+    "irrelevant": "यह छवि प्रासंगिक अवसंरचना नहीं दर्शाती है। कृपया स्पष्ट फोटो अपलोड करें।",
+    "uploadAnother": "दूसरी फोटो अपलोड करें"
+  },
+  "reportForm": {
+    "title": "रिपोर्ट विवरण",
+    "location": "स्थान",
+    "locationDetected": "GPS स्थान संलग्न",
+    "useMyLocation": "मेरा वर्तमान स्थान उपयोग करें",
+    "assetType": "अवसंरचना प्रकार",
+    "assetTypePlaceholder": "प्रकार चुनें...",
+    "assetName": "संरचना का नाम / स्थान",
+    "assetNamePlaceholder": "उदा. विजयवाड़ा के पास कृष्णा नदी तटबंध",
+    "assetNameHelper": "इस संरचना का नाम या स्थान दर्ज करें",
+    "description": "अतिरिक्त विवरण (वैकल्पिक)",
+    "descriptionPlaceholder": "दिखने वाली समस्याओं का वर्णन करें...",
+    "voiceInput": "बोलकर दर्ज करें",
+    "listening": "सुन रहा है...",
+    "submit": "विश्लेषण करें और कार्ड बनाएं"
+  },
+  "assetTypes": {
+    "river_embankment": "नदी तटबंध",
+    "canal_embankment": "नहर का किनारा",
+    "road_embankment": "सड़क का तटबंध",
+    "railway_embankment": "रेलवे तटबंध",
+    "dam_reservoir": "बांध / जलाशय"
+  },
+  "observations": {
+    "title": "दिखने वाले नुकसान के विकल्प (वैकल्पिक)",
+    "seepage": "क्या पानी का रिसाव हो रहा है?",
+    "cracks": "क्या सतह पर दरारें दिख रही हैं?",
+    "settlement": "क्या जमीन या दीवार धंस रही है?",
+    "erosion": "क्या मिट्टी बह रही है?",
+    "yes": "हाँ",
+    "no": "नहीं",
+    "not_sure": "निश्चित नहीं"
+  },
+  "processing": {
+    "title": "विश्लेषण हो रहा है...",
+    "photoVerified": "गुणवत्ता सत्यापित",
+    "locationAdded": "स्थान संलग्न",
+    "assetIdentified": "प्रकार पहचाना गया",
+    "assessingConditions": "जोखिम मूल्यांकन",
+    "preparingCard": "हेल्थ कार्ड तैयार हो रहा है"
+  },
+  "healthCard": {
+    "title": "संरचना हेल्थ कार्ड",
+    "riskScore": "संरचनात्मक जोखिम स्कोर",
+    "riskLevel": "जोखिम स्तर",
+    "explainableScore": "जोखिम विवरण",
+    "erosion": "मिट्टी का क्षरण",
+    "seepage": "पानी का रिसाव",
+    "cracks": "दरारें",
+    "settlement": "धंसाव",
+    "communityReports": "समुदाय रिपोर्ट",
+    "recommendedAction": "अनुशंसित कार्रवाई",
+    "viewOnMap": "मानचित्र पर देखें",
+    "share": "शेयर करें",
+    "downloadPdf": "PDF डाउनलोड करें",
+    "language": "भाषा",
+    "assetDetails": "संरचना विवरण",
+    "healthCardId": "हेल्थ कार्ड ID",
+    "assetType": "संरचना प्रकार",
+    "coordinates": "GPS निर्देशांक",
+    "reportDate": "रिपोर्ट दिनांक",
+    "structuralIndicators": "संरचनात्मक क्षति मूल्यांकन",
+    "visibleIssues": "रिपोर्ट किया गया नुकसान",
+    "totalReports": "कुल रिपोर्ट",
+    "unresolvedReports": "कार्रवाई लंबित रिपोर्ट",
+    "latestReport": "नवीनतम रिपोर्ट",
+    "noCommunityData": "इस संरचना के लिए कोई समुदाय रिपोर्ट दर्ज नहीं है।",
+    "engineerReports": "इंजीनियर निरीक्षण रिपोर्ट",
+    "inspections": "कुल निरीक्षण",
+    "latestInspection": "नवीनतम निरीक्षण",
+    "currentStatus": "वर्तमान स्थिति",
+    "noEngineerData": "अभी तक कोई इंजीनियर निरीक्षण रिपोर्ट दर्ज नहीं है।",
+    "riskExplanation": "जोखिम स्कोर विवरण"
+  },
+  "status": {
+    "new": "नई रिपोर्ट",
+    "under_review": "समीक्षाधीन",
+    "inspection_required": "क्षेत्र निरीक्षण आवश्यक",
+    "action_recommended": "कार्रवाई अनुशंसित",
+    "manual_inspection_needed": "मैन्युअल निरीक्षण आवश्यक (AI ऑफलाइन)",
+    "resolved": "समाधानित"
+  },
+  "severity": {
+    "none": "कोई नहीं",
+    "minor": "मामूली",
+    "moderate": "मध्यम",
+    "severe": "गंभीर",
+    "visible": "दृश्यमान",
+    "suspected": "संदिग्ध",
+    "cannot_determine": "अस्पष्ट"
+  },
+  "risk": {
+    "score": "जोखिम स्कोर",
+    "level": "जोखिम स्तर",
+    "low": "कम जोखिम",
+    "moderate": "मध्यम जोखिम",
+    "high": "उच्च जोखिम",
+    "critical": "गंभीर जोखिम"
+  },
+  "riskLevel": {
+    "low": "कम जोखिम",
+    "moderate": "मध्यम जोखिम",
+    "high": "उच्च जोखिम",
+    "critical": "गंभीर जोखिम"
+  },
+  "assetIndicators": {
+    "river_embankment": {
+      "erosion": "तटबंध मिट्टी कटाव",
+      "seepage": "निचले हिस्से से पानी रिसाव",
+      "cracks": "ढलान खिसकना व दरारें",
+      "settlement": "सतह का धंसना"
+    },
+    "canal_embankment": {
+      "erosion": "नहर के किनारे का कटाव",
+      "seepage": "दीवार से पानी रिसाव",
+      "cracks": "कंक्रीट दीवार की दरारें",
+      "settlement": "नहर तल धंसना व रुकावट"
+    },
+    "road_embankment": {
+      "erosion": "सड़क किनारे का कटाव",
+      "seepage": "नाले से पानी रिसाव",
+      "cracks": "दीवार में दरारें",
+      "settlement": "सड़क धंसना व गड्ढा होना"
+    },
+    "railway_embankment": {
+      "erosion": "रेलवे ढलान पर कटाव",
+      "seepage": "पटरी के नीचे पानी रिसाव",
+      "cracks": "ट्रैकबेड में दरारें",
+      "settlement": "पटरी के पत्थर खिसकना व धंसना"
+    },
+    "dam_reservoir": {
+      "erosion": "स्पिलवे आधार का कटाव",
+      "seepage": "बांध के पीछे रिसाव",
+      "cracks": "साइड दीवार में दरारें",
+      "settlement": "बांध का ऊपरी हिस्सा धंसना"
+    }
+  },
+  "healthCards": {
+    "title": "अवसंरचना हेल्थ कार्ड्स",
+    "subtitle": "सभी रिपोर्ट की गई संपत्ति और उनके जोखिम स्कोर।",
+    "searchPlaceholder": "नाम या स्थान खोजें...",
+    "allTypes": "सभी प्रकार",
+    "allRisks": "सभी जोखिम स्तर",
+    "reported": "रिपोर्ट दिनांक",
+    "viewCard": "हेल्थ कार्ड देखें",
+    "createNew": "नई समस्या दर्ज करें",
+    "noReports": "कोई हेल्थ कार्ड दर्ज नहीं है।",
+    "filterAll": "सभी हेल्थ कार्ड",
+    "filterLow": "कम जोखिम",
+    "filterModerate": "मध्यम जोखिम",
+    "filterHigh": "उच्च जोखिम",
+    "filterCritical": "गंभीर जोखिम"
+  },
+  "map": {
+    "title": "अवसंरचना जोखिम मानचित्र",
+    "legend": "जोखिम स्तर",
+    "viewHealthCard": "हेल्थ कार्ड देखें",
+    "riskLabel": "जोखिम स्कोर"
+  },
+  "admin": {
+    "title": "प्राधिकरण डैशबोर्ड",
+    "subtitle": "प्राथमिकता अलर्ट और स्थिति प्रबंधन।",
+    "priorityAlerts": "प्राथमिकता अलर्ट",
+    "totalReports": "कुल हेल्थ कार्ड्स",
+    "criticalCount": "गंभीर जोखिम",
+    "unresolvedCount": "कार्रवाई आवश्यक",
+    "updateStatus": "स्थिति अपडेट करें",
+    "openReport": "पूर्ण रिपोर्ट खोलें"
+  },
+  "dashboard": {
+    "title": "प्राधिकरण डैशबोर्ड",
+    "subtitle": "प्राथमिकता अलर्ट और स्थिति प्रबंधन।",
+    "priorityAlerts": "प्राथमिकता अलर्ट",
+    "totalReports": "कुल हेल्थ कार्ड्स",
+    "criticalCount": "गंभीर जोखिम",
+    "highCount": "उच्च जोखिम",
+    "moderateCount": "मध्यम जोखिम",
+    "lowCount": "कम जोखिम",
+    "openReport": "रिपोर्ट खोलें",
+    "noAlerts": "कोई प्राथमिकता अलर्ट नहीं है।",
+    "statusUpdated": "स्थिति अपडेट सफल"
+  },
+  "about": {
+    "title": "रक्षक के बारे में",
+    "subtitle": "अवसंरचना सुरक्षा मंच",
+    "overviewTitle": "हमारा मिशन",
+    "overviewText": "रक्षक नागरिक रिपोर्टिंग को त्वरित इंजीनियरिंग कार्रवाई से जोड़ता है। एक तस्वीर को विस्तृत हेल्थ कार्ड में बदलकर यह विफलता को रोकने में मदद करता है।",
+    "workflowTitle": "कार्यप्रणाली",
+    "step1Title": "1. फोटो लें",
+    "step1Desc": "क्षतिग्रस्त अवसंरचना की फोटो लें।",
+    "step2Title": "2. सत्यापन",
+    "step2Desc": "फोटो स्पष्टता और प्रासंगिकता जांच।",
+    "step3Title": "3. जोखिम मूल्यांकन",
+    "step3Desc": "दृश्य संकेतों और डेटा का विश्लेषण।",
+    "step4Title": "4. हेल्थ कार्ड",
+    "step4Desc": "0-100 जोखिम स्कोर और सुझाव।",
+    "step5Title": "5. अलर्ट व कार्रवाई",
+    "step5Desc": "अधिकारियों को त्वरित सूचना।",
+    "indicatorsTitle": "मुख्य क्षति संकेत",
+    "erosionTitle": "मिट्टी का कटाव",
+    "erosionDesc": "पानी के बहाव से मिट्टी बह जाना।",
+    "seepageTitle": "पानी का रिसाव",
+    "seepageDesc": "संरचना के नीचे से पानी निकलना।",
+    "cracksTitle": "दरारें",
+    "cracksDesc": "सतह या दीवारों में दरारें।",
+    "settlementTitle": "धंसाव",
+    "settlementDesc": "जमीन या संरचना का नीचे धंसना।",
+    "methodologyTitle": "जोखिम स्कोरिंग",
+    "methodologyDesc": "कटाव, दरारें, रिसाव और धंसाव के आधार पर 0-100 का पारदर्शी स्कोर।",
+    "targetAssetsTitle": "समर्थित अवसंरचना",
+    "targetAssetsDesc": "नदी तटबंध, नहरें, सड़कें, रेलवे ढलान और बांध।",
+    "noteTitle": "महत्वपूर्ण सूचना",
+    "noteText": "रक्षक एक प्रारंभिक दृश्य मूल्यांकन प्रदान करता है।"
+  },
+  "errors": {
+    "noImage": "कृपया फोटो अपलोड करें।",
+    "unsupportedFormat": "JPG, PNG या WEBP अपलोड करें।",
+    "blurry": "फोटो बहुत धुंधली है।",
+    "irrelevant": "यह फोटो प्रासंगिक अवसंरचना नहीं दर्शाती।",
+    "locationUnavailable": "स्थान प्राप्त नहीं हो सका।",
+    "analysisFailed": "विश्लेषण पूरा नहीं हो सका।",
+    "noReports": "कोई रिपोर्ट दर्ज नहीं है।",
+    "tryAgain": "पुनः प्रयास करें",
+    "reportNotFound": "रिपोर्ट नहीं मिली।"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "back": "वापस",
+    "close": "बंद करें",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "or": "या"
+  },
+  "obs": {
+    "title": "आपको क्या नुकसान दिख रहा है?",
+    "subtitle": "यहां दिखने वाली समस्याओं पर टैप करें:",
+    "river": {
+      "toeErosion": "नीचे से मिट्टी बहना",
+      "seepagePiping": "निचले हिस्से से पानी का रिसाव",
+      "slopeSlumping": "मिट्टी या ढलान का खिसकना",
+      "longitudinalCracks": "ऊपरी या किनारे पर लंबी दरारें",
+      "vegetation": "झाड़ियों व पौधों से नुकसान"
+    },
+    "canal": {
+      "wallSeepage": "नहर की दीवार से रिसाव",
+      "liningCracks": "कंक्रीट दीवार में दरारें",
+      "bermErosion": "नहर का किनारा टूटना",
+      "bedSiltation": "नहर में मिट्टी जमा होना या रुकावट",
+      "sluiceDamage": "पानी का गेट या दीवार टूटना"
+    },
+    "road": {
+      "pavementSinkhole": "सड़क का धंसना या गड्ढा होना",
+      "shoulderErosion": "सड़क का किनारा बहना",
+      "retainingWall": "किनारे की दीवार मुड़ना या टूटना",
+      "slopeLandslide": "सड़क पर भूस्खलन / मिट्टी गिरना",
+      "culvertBlockage": "नाला या पाइप बंद होना"
+    },
+    "railway": {
+      "ballastShift": "पटरी के पत्थर खिसकना या धंसना",
+      "subgradeSlump": "पटरी के नीचे की जमीन धंसना",
+      "gullyWashout": "ढलान पर गहरे कटाव बनना",
+      "trackbedCracks": "रेलवे ट्रैक के पास दरारें",
+      "hillsideRockfall": "पहाड़ी से पत्थर या मिट्टी गिरना"
+    },
+    "dam": {
+      "spillwaySeepage": "स्पिलवे के पास पानी का रिसाव",
+      "abutmentCracks": "बांध की साइड दीवारों में दरारें",
+      "crestSettlement": "बांध का ऊपरी हिस्सा धंसना",
+      "downstreamWetspots": "बांध के नीचे गीले धब्बे या रिसाव",
+      "gateDamage": "गेट या नियंत्रण तंत्र में क्षति"
+    }
+  }
+}
