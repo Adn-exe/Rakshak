@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter, usePathname } from 'next/navigation';
 import { useTranslation, LANGUAGE_LABELS, LANGUAGES } from '@/lib/i18n';
 import { getReport, saveReport, deleteReport } from '@/lib/storage';
+import { calculateRisk } from '@/lib/risk';
 import { RiskBadge } from '@/components/ui/RiskBadge';
 import { RiskScore } from '@/components/ui/RiskScore';
 import { HealthMetric } from '@/components/ui/HealthMetric';
@@ -61,7 +62,12 @@ export default function HealthCardPage() {
     );
   }
 
-  const riskBreakdown = report.riskBreakdown;
+  const riskBreakdown = report.riskBreakdown || calculateRisk(
+    report.observations,
+    report.additionalIssues,
+    report.communityReports,
+    report.unresolvedCommunityReports
+  );
 
   // Bar chart helper
   const RiskBar = ({ label, score, max = 100 }: { label: string; score: number; max?: number }) => {

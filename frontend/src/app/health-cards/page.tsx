@@ -33,8 +33,11 @@ export default function HealthCardsPage() {
     setReports((prev) => prev.filter((r) => r.id !== deletedId));
   };
 
+  // Only display reports officially submitted to authorities (submittedToAuthority === true)
+  const submittedReports = reports.filter((r) => r.submittedToAuthority === true);
+
   // Search & Risk filter
-  const filteredReports = reports.filter((report) => {
+  const filteredReports = submittedReports.filter((report) => {
     // Risk level filter
     if (filter !== 'all' && report.riskLevel !== filter) {
       return false;

@@ -43,8 +43,8 @@ export default function AdminDashboard() {
     setReports(getReports());
   }, []);
 
-  // Only display reports officially submitted to local authorities (submittedToAuthority !== false)
-  const authorityReports = reports.filter((r) => r.submittedToAuthority !== false);
+  // Only display reports officially submitted to local authorities (submittedToAuthority === true)
+  const authorityReports = reports.filter((r) => r.submittedToAuthority === true);
 
   const sortedReports = [...authorityReports].sort((a, b) => b.riskScore - a.riskScore);
   const critical = authorityReports.filter((r) => r.riskLevel === 'critical').length;

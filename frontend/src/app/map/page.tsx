@@ -26,7 +26,7 @@ function MapContent() {
 
   useEffect(() => {
     initDemoData(DEMO_ASSETS);
-    const reports = getReports();
+    const reports = getReports().filter((r: Report) => r.submittedToAuthority === true);
 
     const mapMarkers: MapMarkerData[] = reports.map((r: Report) => {
       const mainIssues: string[] = [];
