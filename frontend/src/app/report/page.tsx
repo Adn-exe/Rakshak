@@ -17,7 +17,8 @@ import { getCommunityData, getEngineerReports } from '@/lib/demoData';
 import type { Report, AssetType, Location, UserObservations } from '@/types';
 import {
   MapPin, Mic, MicOff, Loader2, CheckCircle2, AlertTriangle, XCircle,
-  Navigation, ChevronRight, Waves, Droplets, Landmark, ShieldAlert, Square, Sparkles
+  Navigation, ChevronRight, Waves, Droplets, Landmark, ShieldAlert, Square, Sparkles,
+  Scan, Eye, Focus, ShieldCheck
 } from 'lucide-react';
 
 type Stage = 'upload' | 'quality' | 'relevance' | 'form' | 'processing' | 'complete';
@@ -28,30 +29,39 @@ const ASSET_TYPES: AssetType[] = [
 
 const ASSET_TYPE_CONFIG: Record<AssetType, { icon: React.ReactNode; labelKey: string; color: string }> = {
   river_embankment: {
-    icon: <Waves className="h-4 w-4" />,
+    icon: <Waves className="h-4 w-4 text-blue-600 dark:text-blue-400" />,
     labelKey: 'assetTypes.river_embankment',
-    color: 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-300 ring-2 ring-blue-500/30',
+    color: 'border-blue-500/40 bg-blue-50/50 dark:bg-blue-950/20 text-blue-900 dark:text-blue-200',
   },
   canal_embankment: {
-    icon: <Droplets className="h-4 w-4" />,
+    icon: <Droplets className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />,
     labelKey: 'assetTypes.canal_embankment',
-    color: 'border-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/20 text-cyan-700 dark:text-cyan-300 ring-2 ring-cyan-500/30',
+    color: 'border-cyan-500/40 bg-cyan-50/50 dark:bg-cyan-950/20 text-cyan-900 dark:text-cyan-200',
   },
   road_embankment: {
-    icon: <Navigation className="h-4 w-4" />,
+    icon: <Landmark className="h-4 w-4 text-amber-600 dark:text-amber-400" />,
     labelKey: 'assetTypes.road_embankment',
-    color: 'border-amber-500 bg-amber-50/50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-300 ring-2 ring-amber-500/30',
+    color: 'border-amber-500/40 bg-amber-50/50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-200',
   },
   railway_embankment: {
-    icon: <Landmark className="h-4 w-4" />,
+    icon: <ShieldAlert className="h-4 w-4 text-purple-600 dark:text-purple-400" />,
     labelKey: 'assetTypes.railway_embankment',
-    color: 'border-purple-500 bg-purple-50/50 dark:bg-purple-950/20 text-purple-700 dark:text-purple-300 ring-2 ring-purple-500/30',
+    color: 'border-purple-500/40 bg-purple-50/50 dark:bg-purple-950/20 text-purple-900 dark:text-purple-200',
   },
   dam_reservoir: {
-    icon: <ShieldAlert className="h-4 w-4" />,
+    icon: <Square className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />,
     labelKey: 'assetTypes.dam_reservoir',
-    color: 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300 ring-2 ring-emerald-500/30',
+    color: 'border-emerald-500/40 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-900 dark:text-emerald-200',
   },
+};
+
+// Asset-specific damage observation chips
+const ASSET_OBSERVATION_CHIPS: Record<AssetType, string[]> = {
+  river_embankment: ['toeErosion', 'slopeSlumping', 'seepagePiping', 'longitudinalCracks', 'scouring', 'crestSettlement'],
+  canal_embankment: ['liningCracks', 'bermErosion', 'wallSeepage', 'bedSiltation', 'sluiceDamage', 'embankmentBreach'],
+  road_embankment: ['shoulderErosion', 'guardrailUndermining', 'pavementSinkhole', 'culvertFracture', 'retainingWallBulge', 'sideSlopeFailure'],
+  railway_embankment: ['ballastLoss', 'trackMisalignment', 'slopeWashout', 'drainageBlockage', 'toeHeave', 'cuttingInstability'],
+  dam_reservoir: ['spillwayCracks', 'abutmentSeepage', 'upstreamRiprapDisplacement', 'crestSettlementDam', 'sinkholeFormation', 'downstreamBoil'],
 };
 
 const ASSET_SPECIFIC_OBSERVATIONS: Record<AssetType, Array<{ id: string; labelKey: string }>> = {
@@ -430,10 +440,89 @@ export default function ReportPage() {
 
         {/* STAGE: Quality Check */}
         {stage === 'quality' && (
-          <Card>
-            <CardContent className="p-8 text-center space-y-4">
-              <Loader2 className="h-10 w-10 text-primary animate-spin mx-auto" />
-              <p className="text-sm font-medium">{t('quality.checking')}</p>
+          <Card className="border-2 border-primary/30 bg-card shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+            <CardHeader className="text-center pb-2 bg-gradient-to-b from-primary/10 to-transparent border-b border-border/50">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-xs font-mono font-bold text-primary mx-auto mb-1">
+                <Scan className="h-3.5 w-3.5 animate-pulse text-primary" />
+                <span>AI OPTICAL VERIFICATION</span>
+              </div>
+              <CardTitle className="text-xl font-bold tracking-tight">{t('quality.checking')}</CardTitle>
+              <p className="text-xs text-muted-foreground">Evaluating camera sharpness, blur metrics, and infrastructure relevance</p>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              {/* Photo Scanning Box with Optical Reticle */}
+              {previewUrl && (
+                <div className="relative h-56 sm:h-64 rounded-2xl overflow-hidden border-2 border-primary/40 shadow-xl bg-slate-950 group">
+                  <img
+                    src={previewUrl}
+                    alt="Quality Evaluation"
+                    className="w-full h-full object-cover opacity-85 filter contrast-105"
+                  />
+
+                  {/* High-Tech Shimmer Grid */}
+                  <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:20px_20px] opacity-20 pointer-events-none" />
+
+                  {/* Scanning Laser Beam moving down and up */}
+                  <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_20px_#38bdf8] animate-[bounce_1.8s_infinite] top-0" />
+
+                  {/* Optical Reticle Crosshairs in Center */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="relative w-24 h-24 rounded-full border border-cyan-400/40 flex items-center justify-center animate-pulse">
+                      <div className="w-16 h-16 rounded-full border border-dashed border-cyan-300/60 animate-spin" />
+                      <div className="absolute w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
+                      <div className="absolute -top-2 text-[9px] font-mono text-cyan-300 font-bold tracking-wider">FOCUS</div>
+                    </div>
+                  </div>
+
+                  {/* Corner Target Brackets */}
+                  <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-cyan-400" />
+                  <div className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-cyan-400" />
+                  <div className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-cyan-400" />
+                  <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-cyan-400" />
+
+                  {/* Bottom Real-Time Telemetry Bar */}
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-slate-900/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-cyan-500/30 text-white text-xs font-mono">
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="h-3.5 w-3.5 text-cyan-400 animate-spin" />
+                      <span className="font-semibold text-cyan-300">MEASURING LAPLACIAN VARIANCE</span>
+                    </div>
+                    <span className="text-slate-400 text-[10px] hidden sm:inline">EDGE CONTRAST ENGINE</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Three Diagnostic Checklist Badges */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 rounded-xl border border-border/80 bg-muted/30 flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+                    <Focus className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-foreground">Sharpness</p>
+                    <p className="text-[10px] text-muted-foreground truncate">Checking blur variance</p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl border border-border/80 bg-muted/30 flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">
+                    <Eye className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-foreground">Exposure</p>
+                    <p className="text-[10px] text-muted-foreground truncate">Lighting & resolution</p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl border border-border/80 bg-muted/30 flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 shrink-0">
+                    <ShieldCheck className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-foreground">Relevance</p>
+                    <p className="text-[10px] text-muted-foreground truncate">Structure validation</p>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
