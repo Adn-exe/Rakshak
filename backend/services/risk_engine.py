@@ -149,20 +149,25 @@ def calculate_risk(
         + community_score * WEIGHTS["community"]
     )
 
-    # Single severity floor rule:
-    # Severe damage (100) on ANY single indicator MUST trigger Critical/High risk (floor 80)
-    # Moderate/visible damage (50) on ANY single indicator MUST trigger High risk (floor 52)
-    max_single = max(cracks_score, erosion_score, seepage_score, settlement_score)
-
-    if max_single >= 100:
-        total = max(weighted_total + 40, 80)
-    elif max_single >= 50:
-        total = max(weighted_total + 20, 52)
+    # Check if AI vision provided a holistic contextual risk score
+    ai_score = assessment.get("ai_risk_score")
+    if ai_score is not None and isinstance(ai_score, (int, float)) and not assessment.get("is_fallback"):
+        total = max(0, min(100, int(ai_score)))
     else:
-        total = weighted_total
+        # Single severity floor rule:
+        # Severe damage (100) on ANY single indicator MUST trigger Critical/High risk (floor 80)
+        # Moderate/visible damage (50) on ANY single indicator MUST trigger High risk (floor 52)
+        max_single = max(cracks_score, erosion_score, seepage_score, settlement_score)
 
-    # Clamp to 0-100
-    total = max(0, min(100, round(total)))
+        if max_single >= 100:
+            total = max(weighted_total + 40, 80)
+        elif max_single >= 50:
+            total = max(weighted_total + 20, 52)
+        else:
+            total = weighted_total
+
+        # Clamp to 0-100
+        total = max(0, min(100, round(total)))
 
     return {
         "cracksScore": cracks_score,

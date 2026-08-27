@@ -47,12 +47,23 @@ export interface StructuralFinding {
   explanation: string;
 }
 
+export interface AdditionalDamageFinding {
+  title: string;
+  severity: SeverityLevel;
+  confidence: number;
+  explanation: string;
+}
+
 export interface AssessmentResult {
   cracks: StructuralFinding;
   erosion: StructuralFinding;
   seepage: StructuralFinding;
   settlement: StructuralFinding;
+  additionalFindings?: AdditionalDamageFinding[];
   additionalIssues: string[];
+  aiRiskScore?: number;
+  aiRiskLevel?: RiskLevel;
+  riskFactorsAnalysis?: string;
   summary: string;
 }
 

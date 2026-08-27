@@ -266,11 +266,39 @@ export default function HealthCardPage() {
             <CardTitle className="text-sm">{t('healthCard.structuralIndicators')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <HealthMetric label={`assetIndicators.${report.assetType}.cracks`} severity={report.observations.cracks} explanation={report.assessment?.cracks?.explanation} />
               <HealthMetric label={`assetIndicators.${report.assetType}.erosion`} severity={report.observations.erosion} explanation={report.assessment?.erosion?.explanation} />
               <HealthMetric label={`assetIndicators.${report.assetType}.seepage`} severity={report.observations.seepage} explanation={report.assessment?.seepage?.explanation} />
               <HealthMetric label={`assetIndicators.${report.assetType}.settlement`} severity={report.observations.settlement} explanation={report.assessment?.settlement?.explanation} />
+
+              {/* Dynamic Additional Damage Cards detected by AI */}
+              {report.assessment?.additionalFindings?.map((finding, idx) => (
+                <div key={idx} className="p-3.5 rounded-xl border border-border/80 bg-card flex flex-col justify-between space-y-2 shadow-2xs hover:border-primary/40 transition-colors">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                      <p className="text-xs font-bold text-foreground truncate">{finding.title}</p>
+                    </div>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                      finding.severity === 'severe'
+                        ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                        : finding.severity === 'moderate'
+                        ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                        : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                    }`}>
+                      {finding.severity}
+                    </span>
+                  </div>
+                  {finding.explanation && (
+                    <p className="text-xs text-muted-foreground leading-relaxed">{finding.explanation}</p>
+                  )}
+                  <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-1 border-t border-border/40 font-mono">
+                    <span>AI Confidence</span>
+                    <span className="font-semibold text-foreground">{Math.round(finding.confidence * 100)}%</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
@@ -366,6 +394,12 @@ export default function HealthCardPage() {
           <Card className="mb-6">
             <CardHeader><CardTitle className="text-sm">{t('healthCard.riskExplanation')}</CardTitle></CardHeader>
             <CardContent className="space-y-3">
+              {report.assessment?.riskFactorsAnalysis && (
+                <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 text-xs text-foreground leading-relaxed mb-3">
+                  <span className="font-semibold text-primary block mb-0.5">🧠 AI Engineering Risk Assessment:</span>
+                  {report.assessment.riskFactorsAnalysis}
+                </div>
+              )}
               <RiskBar label={t(`assetIndicators.${report.assetType}.erosion`)} score={riskBreakdown.erosionScore} />
               <RiskBar label={t(`assetIndicators.${report.assetType}.seepage`)} score={riskBreakdown.seepageScore} />
               <RiskBar label={t(`assetIndicators.${report.assetType}.cracks`)} score={riskBreakdown.cracksScore} />
