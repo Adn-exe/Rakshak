@@ -360,12 +360,14 @@ export default function ReportPage() {
       updateStep(4, 'active');
       await sleep(400);
 
-      const hasCracks = selectedObs.some((o) => o.includes('crack'));
-      const hasErosion = selectedObs.some((o) => o.includes('erosion') || o.includes('scouring') || o.includes('washing'));
-      const hasSeepage = selectedObs.some((o) => o.includes('seepage') || o.includes('leaking') || o.includes('piping'));
-      const hasSettlement = selectedObs.some((o) => o.includes('settlement') || o.includes('sinking') || o.includes('slump'));
+      const lowerObs = selectedObs.map((o) => o.toLowerCase());
+      const hasCracks = lowerObs.some((o) => o.includes('crack'));
+      const hasErosion = lowerObs.some((o) => o.includes('erosion') || o.includes('scour') || o.includes('wash') || o.includes('berm'));
+      const hasSeepage = lowerObs.some((o) => o.includes('seepage') || o.includes('leak') || o.includes('pipe') || o.includes('wet'));
+      const hasSettlement = lowerObs.some((o) => o.includes('settle') || o.includes('sink') || o.includes('slump') || o.includes('hole'));
 
-      const computedScore = Math.min(95, Math.max(20, 20 + selectedObs.length * 18));
+      const damageCount = [hasCracks, hasErosion, hasSeepage, hasSettlement].filter(Boolean).length;
+      const computedScore = damageCount > 0 ? Math.min(95, 45 + damageCount * 18) : 55;
       const computedLevel = computedScore >= 75 ? 'critical' : computedScore >= 50 ? 'high' : computedScore >= 30 ? 'moderate' : 'low';
 
       const imageData = await compressImageForStorage(selectedFile);

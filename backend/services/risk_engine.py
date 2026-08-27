@@ -140,7 +140,7 @@ def calculate_risk(
     )
 
     # Calculate weighted total
-    total = (
+    weighted_total = (
         cracks_score * WEIGHTS["cracks"]
         + erosion_score * WEIGHTS["erosion"]
         + seepage_score * WEIGHTS["seepage"]
@@ -148,6 +148,18 @@ def calculate_risk(
         + additional_score * WEIGHTS["additional"]
         + community_score * WEIGHTS["community"]
     )
+
+    # Single severity floor rule:
+    # Severe damage (100) on ANY single indicator MUST trigger Critical/High risk (floor 80)
+    # Moderate/visible damage (50) on ANY single indicator MUST trigger High risk (floor 52)
+    max_single = max(cracks_score, erosion_score, seepage_score, settlement_score)
+
+    if max_single >= 100:
+        total = max(weighted_total + 40, 80)
+    elif max_single >= 50:
+        total = max(weighted_total + 20, 52)
+    else:
+        total = weighted_total
 
     # Clamp to 0-100
     total = max(0, min(100, round(total)))
