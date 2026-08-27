@@ -54,8 +54,31 @@ Respond ONLY with a valid JSON object (no markdown, no code fences):
 }"""
 
 
+import re
+
+
+def _extract_json(text: str) -> dict:
+    """Robustly extract and parse JSON object from LLM response (handling think tags and markdown)."""
+    cleaned = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+    try:
+        return json.loads(cleaned)
+    except Exception:
+        pass
+    match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', cleaned, re.DOTALL)
+    if match:
+        try:
+            return json.loads(match.group(1))
+        except Exception:
+            pass
+    first_brace = cleaned.find('{')
+    last_brace = cleaned.rfind('}')
+    if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
+        return json.loads(cleaned[first_brace:last_brace + 1])
+    raise ValueError(f"Could not parse valid JSON from model output: {text[:150]}...")
+
+
 def _verify_with_groq(image_bytes: bytes) -> dict | None:
-    """Fallback image relevance check using Groq Llama 3.2 Vision."""
+    """Fallback image relevance check using Groq Vision API with robust JSON extraction."""
     if not GROQ_API_KEY:
         return None
     try:
@@ -69,6 +92,10 @@ def _verify_with_groq(image_bytes: bytes) -> dict | None:
                 completion = client.chat.completions.create(
                     model=m,
                     messages=[
+                        {
+                            "role": "system",
+                            "content": "You are a civil & geotechnical infrastructure classification expert. Output valid JSON only.",
+                        },
                         {
                             "role": "user",
                             "content": [
@@ -84,10 +111,9 @@ def _verify_with_groq(image_bytes: bytes) -> dict | None:
                     ],
                     temperature=0.1,
                     max_tokens=256,
-                    response_format={"type": "json_object"}
                 )
                 text = completion.choices[0].message.content.strip()
-                result = json.loads(text)
+                result = _extract_json(text)
                 return {
                     "is_relevant": bool(result.get("is_relevant", False)),
                     "confidence": float(result.get("confidence", 0.0)),

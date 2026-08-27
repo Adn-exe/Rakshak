@@ -1,6 +1,5 @@
-"""Structural assessment using Google Gemini multimodal API."""
-
 import os
+import re
 import json
 import base64
 import logging
@@ -12,39 +11,39 @@ logger = logging.getLogger(__name__)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
-ASSESSMENT_PROMPT = """You are a structural assessment system for JalRaksha, an infrastructure health monitoring platform.
+ASSESSMENT_PROMPT = """You are a senior civil & structural engineering inspector for Rakshak, evaluating critical infrastructure (river embankments, canal banks, dams, road slopes, and railway embankments).
 
-Analyze this infrastructure photograph for visible structural conditions. Be honest — only report what you can actually see. Do NOT fabricate findings.
+Carefully inspect this photograph at pixel level for structural defects, distress mechanisms, and visual defects.
 
-For each of the following, assess the severity:
+For each of the following 4 structural indicators, assess the severity:
 
-1. CRACKS: Look for visible cracks on surfaces, walls, slopes
+1. CRACKS: Look for visible cracks on surfaces, concrete, walls, slopes
    Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
 
-2. EROSION: Look for soil loss, surface erosion, wash-away, exposed foundations
+2. EROSION: Look for soil loss, surface erosion, wash-away, exposed foundations, scouring
    Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
 
-3. SEEPAGE: Look for water coming through structure, moisture stains, wet patches
+3. SEEPAGE: Look for water coming through structure, moisture stains, wet patches, piping boils
    Severity: "none" | "suspected" | "visible" | "severe" | "cannot_determine"
 
-4. SETTLEMENT: Look for sinking, depressions, uneven surfaces, tilting
+4. SETTLEMENT: Look for sinking, depressions, uneven surfaces, tilting, slope slump
    Severity: "none" | "minor" | "moderate" | "severe" | "cannot_determine"
 
 For each finding, provide:
 - severity: one of the options above
 - confidence: 0.0 to 1.0 (how confident you are in this assessment)
-- explanation: brief description of what you observe (1-2 sentences)
+- explanation: detailed, professional engineering description of what you observe in the photo (1-2 sentences)
 
 Also identify any additional visible issues from this list:
 - surface erosion, slope deformation, vegetation-related damage, surface collapse
 - drainage problems, scouring, structural surface damage, debris obstruction
 - exposed soil, other visible concerns
 
-IMPORTANT: Clearly distinguish between what is OBSERVED and what is NOT visually determinable.
+IMPORTANT: Clearly distinguish between what is OBSERVED in the photo and what is NOT visually determinable.
 
 {user_context}
 
-Respond ONLY with a valid JSON object (no markdown, no code fences):
+Respond ONLY with a valid JSON object:
 {{
   "cracks": {{
     "severity": "...",
@@ -71,8 +70,28 @@ Respond ONLY with a valid JSON object (no markdown, no code fences):
 }}"""
 
 
+def _extract_json(text: str) -> dict:
+    """Robustly extract and parse JSON object from LLM response (handling think tags and markdown)."""
+    cleaned = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+    try:
+        return json.loads(cleaned)
+    except Exception:
+        pass
+    match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', cleaned, re.DOTALL)
+    if match:
+        try:
+            return json.loads(match.group(1))
+        except Exception:
+            pass
+    first_brace = cleaned.find('{')
+    last_brace = cleaned.rfind('}')
+    if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
+        return json.loads(cleaned[first_brace:last_brace + 1])
+    raise ValueError(f"Could not parse valid JSON from model output: {text[:150]}...")
+
+
 def _assess_with_groq(image_bytes: bytes, prompt: str) -> dict | None:
-    """Fallback photo assessment using Groq Llama 3.2 Vision API."""
+    """Fallback photo assessment using Groq Vision API with robust JSON extraction."""
     if not GROQ_API_KEY:
         return None
     try:
@@ -86,6 +105,10 @@ def _assess_with_groq(image_bytes: bytes, prompt: str) -> dict | None:
                 completion = client.chat.completions.create(
                     model=m,
                     messages=[
+                        {
+                            "role": "system",
+                            "content": "You are a senior civil & geotechnical structural inspection expert for critical flood & water infrastructure. Analyze the photo thoroughly and output valid JSON only.",
+                        },
                         {
                             "role": "user",
                             "content": [
@@ -101,10 +124,9 @@ def _assess_with_groq(image_bytes: bytes, prompt: str) -> dict | None:
                     ],
                     temperature=0.1,
                     max_tokens=1024,
-                    response_format={"type": "json_object"}
                 )
                 text = completion.choices[0].message.content.strip()
-                result = json.loads(text)
+                result = _extract_json(text)
                 logger.info(f"Successfully completed AI photo assessment using Groq ({m})")
                 return result
             except Exception as e:
