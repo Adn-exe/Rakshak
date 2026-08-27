@@ -24,10 +24,10 @@ Rakshak bridges the gap between citizens and local water resource authorities by
 Rakshak (Hindi/Sanskrit for *"Protector"*) is a dual-interface infrastructure health and safety platform built for high-risk flood zones and critical civil infrastructure. It empowers citizens to report visual structural defects (such as bank soil erosion, water seepage, embankment cracking, and crest settlement) and automatically computes a 0–100 explainable risk score.
 
 ### Key Features
-- 🤖 **Google Gemini 3.6 Flash Vision AI**: Native multimodal image inspection assessing structural damage directly from photograph pixels.
+- 🤖 **Dual-Engine AI Vision (Gemini + Groq)**: Primary inspection powered by Google Gemini AI Vision with instant automated failover to **Groq Llama / Qwen Vision** (`qwen/qwen3.8-27b`, `qwen/qwen3.6-27b`) if quota or rate limits are reached.
 - 📐 **Asset-Specific Damage Indicators**: Customized damage metrics tailored specifically for 5 civil asset types (*River Embankments, Canal Banks, Road Embankments, Railway Slopes, Dams & Reservoirs*).
 - 🔍 **Live Search & Risk Filters**: Instant text search across Health Cards by structure name, location address, Health Card ID, or asset type.
-- 📢 **Citizen-to-Authority Dispatch Workflow**: Citizens can inspect generated Health Cards privately before officially dispatching them to local irrigation & disaster response department authorities.
+- 📢 **Explicit Citizen-to-Authority Dispatch Workflow**: Citizens evaluate AI health assessment previews privately in temporary tab sessions; reports are saved to persistent storage and published to authority dashboards only when the citizen explicitly clicks **"Submit Report to Local Authorities"**.
 - 🏛️ **Authority Field Inspection Panel**: Dedicated department portal (`/admin`) for engineers to review priority alerts, update inspection findings, and manage field deployment.
 - 🖼️ **High-Definition Evidence Lightbox**: 100% full-opacity evidence photo showcase with full-screen zoom and GPS coordinate overlays.
 - 🌐 **Multilingual Support**: Supports plain everyday English, Hindi (हिन्दी), Kannada (ಕನ್ನಡ), Telugu (ತೆಲುಗು), and Tamil (தமிழ்).
@@ -42,7 +42,8 @@ Rakshak (Hindi/Sanskrit for *"Protector"*) is a dual-interface infrastructure he
 
 #### Backend
 - **Framework**: Python 3.11+ FastAPI, Uvicorn
-- **AI / Vision**: Google Gemini 3.6 Flash API (`google-generativeai` & PIL)
+- **Primary AI / Vision**: Google Gemini (`gemini-flash-latest`, `gemini-3.6-flash`)
+- **Secondary AI / Vision**: Groq Vision Engine (`qwen/qwen3.8-27b`, `qwen/qwen3.6-27b`)
 - **Image Processing**: OpenCV (`opencv-python-headless`), Pillow (`PIL`)
 - **Environment**: Python `dotenv`
 
@@ -102,10 +103,13 @@ Create a `.env` file in the `backend/` directory:
 cp backend/.env.example backend/.env
 ```
 
-Edit `backend/.env` and insert your Gemini API Key:
+Edit `backend/.env` and insert your Gemini & Groq API Keys:
 ```env
-# Google Gemini API Key
+# Primary AI Vision API Key
 GEMINI_API_KEY=your_actual_gemini_api_key_here
+
+# Secondary Failover AI Vision API Key (Groq)
+GROQ_API_KEY=your_actual_groq_api_key_here
 
 # Blur detection thresholds
 BLUR_THRESHOLD=100
