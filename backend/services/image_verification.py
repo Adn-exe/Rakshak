@@ -63,7 +63,7 @@ def _verify_with_groq(image_bytes: bytes) -> dict | None:
         client = Groq(api_key=GROQ_API_KEY)
         base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-        models = ["llama-3.2-11b-vision-preview", "llama-3.2-90b-vision-preview"]
+        models = ["qwen/qwen3.6-27b", "openai/gpt-oss-120b", "groq/compound"]
         for m in models:
             try:
                 completion = client.chat.completions.create(
@@ -118,30 +118,35 @@ async def verify_image_relevance(image_bytes: bytes, mime_type: str = "image/jpe
             import google.generativeai as genai
 
             genai.configure(api_key=GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-3.6-flash")
-
             pil_image = Image.open(io.BytesIO(image_bytes))
+            gemini_models = ["gemini-3.6-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-flash-latest"]
 
-            response = model.generate_content(
-                [
-                    RELEVANCE_PROMPT,
-                    pil_image,
-                ],
-                generation_config=genai.types.GenerationConfig(
-                    response_mime_type="application/json",
-                    temperature=0.1,
-                    max_output_tokens=256,
-                ),
-            )
+            for m_name in gemini_models:
+                try:
+                    model = genai.GenerativeModel(m_name)
+                    response = model.generate_content(
+                        [
+                            RELEVANCE_PROMPT,
+                            pil_image,
+                        ],
+                        generation_config=genai.types.GenerationConfig(
+                            response_mime_type="application/json",
+                            temperature=0.1,
+                            max_output_tokens=256,
+                        ),
+                    )
 
-            text = response.text.strip()
-            result = json.loads(text)
-            return {
-                "is_relevant": bool(result.get("is_relevant", False)),
-                "confidence": float(result.get("confidence", 0.0)),
-                "category": result.get("category", "not_relevant"),
-                "reason": result.get("reason", ""),
-            }
+                    text = response.text.strip()
+                    result = json.loads(text)
+                    return {
+                        "is_relevant": bool(result.get("is_relevant", False)),
+                        "confidence": float(result.get("confidence", 0.0)),
+                        "category": result.get("category", "not_relevant"),
+                        "reason": result.get("reason", ""),
+                    }
+                except Exception as m_err:
+                    logger.warning(f"Gemini relevance model {m_name} failed: {m_err}")
+                    continue
         except Exception as e:
             logger.warning(f"Gemini relevance check failed ({e}), failing over to Groq AI...")
 

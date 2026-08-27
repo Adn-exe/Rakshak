@@ -80,7 +80,7 @@ def _assess_with_groq(image_bytes: bytes, prompt: str) -> dict | None:
         client = Groq(api_key=GROQ_API_KEY)
         base64_image = base64.b64encode(image_bytes).decode("utf-8")
 
-        models = ["llama-3.2-11b-vision-preview", "llama-3.2-90b-vision-preview"]
+        models = ["qwen/qwen3.6-27b", "openai/gpt-oss-120b", "groq/compound"]
         for m in models:
             try:
                 completion = client.chat.completions.create(
@@ -161,28 +161,33 @@ async def assess_structure(
             import google.generativeai as genai
 
             genai.configure(api_key=GEMINI_API_KEY)
-            model = genai.GenerativeModel("gemini-3.6-flash")
-
             pil_image = Image.open(io.BytesIO(image_bytes))
+            gemini_models = ["gemini-3.6-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-flash-latest"]
 
-            response = model.generate_content(
-                [
-                    prompt,
-                    pil_image,
-                ],
-                generation_config=genai.types.GenerationConfig(
-                    response_mime_type="application/json",
-                    temperature=0.1,
-                    max_output_tokens=1024,
-                ),
-            )
+            for m_name in gemini_models:
+                try:
+                    model = genai.GenerativeModel(m_name)
+                    response = model.generate_content(
+                        [
+                            prompt,
+                            pil_image,
+                        ],
+                        generation_config=genai.types.GenerationConfig(
+                            response_mime_type="application/json",
+                            temperature=0.1,
+                            max_output_tokens=1024,
+                        ),
+                    )
 
-            text = response.text.strip()
-            result = json.loads(text)
-            logger.info("Successfully completed AI multimodal photo assessment using Gemini 3.6 Flash")
-            return _normalize_assessment(result)
+                    text = response.text.strip()
+                    result = json.loads(text)
+                    logger.info(f"Successfully completed AI photo assessment using {m_name}")
+                    return _normalize_assessment(result)
+                except Exception as m_err:
+                    logger.warning(f"Gemini model {m_name} failed: {m_err}")
+                    continue
         except Exception as e:
-            logger.warning(f"Gemini photo assessment failed/unavailable ({e}), failing over to Groq AI...")
+            logger.warning(f"Gemini photo assessment failed ({e}), failing over to Groq AI...")
 
     # 2. Try secondary AI vision engine: Groq (Llama 3.2 Vision)
     if GROQ_API_KEY:
