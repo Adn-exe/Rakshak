@@ -773,44 +773,33 @@ export default function ReportPage() {
 
         {/* STAGE: Processing */}
         {stage === 'processing' && (
-          <Card className="border-2 border-primary/40 bg-card shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
-            <CardHeader className="text-center pb-2 bg-gradient-to-b from-primary/10 to-transparent border-b border-border/50">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-xs font-mono font-bold text-primary mx-auto mb-1">
-                <Sparkles className="h-3.5 w-3.5 animate-spin" />
-                <span>AI VISION MULTIMODAL SCANNER</span>
-              </div>
-              <CardTitle className="text-xl font-bold tracking-tight">{t('processing.title')}</CardTitle>
-              <p className="text-xs text-muted-foreground">Analyzing pixels for structural cracking, slope erosion & seepage</p>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              {/* Photo Scanning Overlay Viewport */}
-              {previewUrl && (
-                <div className="relative h-52 sm:h-64 rounded-xl overflow-hidden border-2 border-primary/30 shadow-inner bg-slate-950 group">
-                  <img src={previewUrl} alt="Structure Scan" className="w-full h-full object-cover opacity-80 filter contrast-110 saturate-110" />
-
-                  {/* Scanning Laser Beam */}
-                  <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#10b981] animate-[bounce_2s_infinite] top-0" />
-                  <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px] opacity-25 pointer-events-none" />
-
-                  {/* HUD Corner Framing */}
-                  <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-emerald-400" />
-                  <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-emerald-400" />
-                  <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-emerald-400" />
-                  <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-emerald-400" />
-
-                  {/* HUD Live Telemetry Overlay */}
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-slate-900/85 backdrop-blur-md px-3.5 py-2 rounded-lg border border-emerald-500/30 text-white text-xs font-mono">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                      <span className="font-semibold tracking-wide text-emerald-300">GEMINI / GROQ VISION</span>
-                    </div>
-                    <span className="text-muted-foreground hidden sm:inline">ANALYTICS ENGINE</span>
+          <Card className="border border-border/80 bg-card shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <CardContent className="p-6 sm:p-8 space-y-6">
+              <div className="flex items-center gap-4">
+                {previewUrl ? (
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-muted shrink-0 border border-primary/30 shadow-xs">
+                    <img src={previewUrl} alt="Analyzing" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-primary/10" />
+                    <div className="absolute inset-x-0 h-0.5 bg-primary shadow-[0_0_8px_currentColor] animate-[bounce_1.5s_infinite] top-0" />
                   </div>
+                ) : (
+                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                  </div>
+                )}
+
+                <div className="min-w-0 flex-1">
+                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 text-[11px] font-medium text-primary mb-1">
+                    <Sparkles className="h-3 w-3" />
+                    <span>AI Structural Analysis</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground tracking-tight leading-tight">{t('processing.title')}</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">Evaluating structural damage and computing explainable risk score...</p>
                 </div>
-              )}
+              </div>
 
               {/* Progress Steps List */}
-              <div className="bg-muted/40 p-4 rounded-xl border border-border/60">
+              <div className="bg-muted/40 p-4 rounded-xl border border-border/50">
                 <ProgressSteps steps={processingSteps.map((s) => ({ key: s.key, label: t(`processing.${s.key}`), status: s.status }))} />
               </div>
             </CardContent>
