@@ -181,9 +181,9 @@ async def assess_structure(
             from PIL import Image
             import google.generativeai as genai
 
-            genai.configure(api_key=GEMINI_API_KEY)
+            genai.configure(api_key=GEMINI_API_KEY, transport="rest")
             pil_image = Image.open(io.BytesIO(image_bytes))
-            gemini_models = ["gemini-flash-latest", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.7-flash"]
+            gemini_models = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-3.6-flash"]
 
             for m_name in gemini_models:
                 try:
